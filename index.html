@@ -1,0 +1,1504 @@
+<!DOCTYPE html>
+<html lang="pt-PT">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Formulário de Serviço Técnico Avançado - Grupo Angbu</title>
+    <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@5.15.4/css/all.min.css" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            /* --- CHOOSE YOUR ACCENT THEME --- */
+
+            /* Option 1: Deep Orange Gradient (Currently Active) */
+            --brand-primary-accent: #FF7A00; /* Vibrant Orange */
+            --brand-secondary-accent: #FF4D00; /* Deeper Orange / Reddish-Orange */
+            --shadow-color-accent-rgb: 255, 122, 0; /* RGB for rgba shadow (Orange) */
+
+            /* Option 2: Blue Gradient (To use: comment out Option 1 above, and uncomment Option 2 below) */
+            /*
+            --brand-primary-accent: #00AFFF; /* Brighter Blue */
+            /*--brand-secondary-accent: #007FFF; /* Deeper Blue */
+            /*--shadow-color-accent-rgb: 0, 175, 255; /* RGB for rgba shadow (Blue) */
+            /* --- END OF THEME CHOICE --- */
+
+            /* Derived variables */
+            --brand-gradient: linear-gradient(135deg, var(--brand-primary-accent), var(--brand-secondary-accent));
+            --brand-gradient-hover: linear-gradient(135deg, var(--brand-secondary-accent), var(--brand-primary-accent));
+            --shadow-color-accent: rgba(var(--shadow-color-accent-rgb), 0.35);
+            --shadow-color-accent-strong: rgba(var(--shadow-color-accent-rgb), 0.5);
+            --border-focus: var(--brand-primary-accent); 
+
+            /* Base dark theme colors */
+            --bg-page: #0A0C1F; 
+            --bg-card: #101330; 
+            --bg-form-element: #1A1D3E; 
+            
+            --text-light: #F0F4FF; 
+            --text-medium: #A0A8C0; 
+            --text-placeholder: #606A8A; 
+            
+            --border-form-element: #2A2D50; 
+            
+            --header-bg: #0D0F2B; 
+            --footer-bg: #080A1A; 
+            --shadow-color-dark: rgba(0, 0, 0, 0.5);
+
+            --transition-speed-fast: 0.2s;
+            --transition-speed-medium: 0.3s;
+            --transition-speed-slow: 0.5s;
+
+            /* Progress Bar Colors */
+            --progress-low: #E53E3E; /* Red */
+            --progress-medium: #DD6B20; /* Orange */
+            --progress-high: #38A169; /* Green */
+            --progress-complete: var(--brand-gradient); /* Original gradient for 100% */
+        }
+
+        /* Global Styles & Dynamic Background */
+        body {
+            font-family: 'Poppins', sans-serif;
+            background-color: var(--bg-page);
+            color: var(--text-medium);
+            position: relative;
+            overflow-x: hidden;
+            min-height: 100vh;
+        }
+
+        /* Particle Background Effect */
+        .particle-background {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: -1; 
+            overflow: hidden;
+            pointer-events: none; 
+        }
+
+        .particle {
+            position: absolute;
+            background-color: var(--brand-primary-accent);
+            border-radius: 50%;
+            opacity: 0; 
+            animation: float 20s infinite ease-in-out;
+        }
+
+        @keyframes float {
+            0%, 100% { transform: translateY(0) translateX(0) scale(1); opacity: 0.3; }
+            25% { transform: translateY(-20px) translateX(15px) scale(1.1); opacity: 0.6; }
+            50% { transform: translateY(10px) translateX(-10px) scale(0.9); opacity: 0.4; }
+            75% { transform: translateY(-15px) translateX(20px) scale(1.05); opacity: 0.5; }
+        }
+
+
+        /* Geometric Design Elements in Header/Footer */
+        .geometric-header-bg {
+            position: relative;
+            background-color: var(--header-bg);
+            overflow: hidden;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.03);
+        }
+
+        .geometric-header-bg::before {
+            content: '';
+            position: absolute;
+            top: -50%; right: -30%;
+            width: 100%; height: 200%;
+            background: radial-gradient(circle at center, var(--brand-primary-accent) 0%, transparent 50%);
+            opacity: 0.08;
+            transform: rotate(15deg);
+            animation: subtleRotate 40s infinite linear alternate;
+            z-index: 0;
+        }
+         .geometric-header-bg::after { 
+            display:none;
+        }
+
+
+        .header-content {
+            position: relative;
+            z-index: 1;
+        }
+
+        /* Form Container */
+        .form-container {
+            position: relative;
+            background-color: var(--bg-card);
+            border-radius: 1.25rem; 
+            box-shadow: 0 15px 40px var(--shadow-color-dark), 0 0 30px rgba(var(--shadow-color-accent-rgb), 0.1) inset;
+            overflow: hidden;
+            border: 1px solid rgba(var(--shadow-color-accent-rgb), 0.1);
+            padding: 1.5rem; /* Default padding */
+        }
+
+        @media (min-width: 640px) { /* sm breakpoint */
+            .form-container {
+                padding: 2rem; /* Padding for sm screens and up */
+            }
+        }
+
+        .form-container::before { 
+            content: '';
+            position: absolute;
+            top: 0; left: 0;
+            width: 8px; height: 100%;
+            background: var(--brand-gradient);
+            box-shadow: 0 0 15px var(--shadow-color-accent);
+        }
+
+        /* Form Elements: Inputs, Textareas, Selects */
+        .form-input, .form-textarea, .form-select {
+            background-color: var(--bg-form-element);
+            border: 1px solid var(--border-form-element);
+            color: var(--text-light);
+            border-radius: 0.625rem; 
+            padding: 0.875rem 1.125rem; 
+            width: 100%;
+            transition: all var(--transition-speed-medium) ease, transform var(--transition-speed-fast) ease;
+            font-size: 0.9rem;
+            box-shadow: inset 0 1px 3px rgba(0,0,0,0.3);
+        }
+
+        .form-input::placeholder, .form-textarea::placeholder {
+            color: var(--text-placeholder);
+            opacity: 1;
+        }
+
+        .form-input:focus, .form-textarea:focus, .form-select:focus {
+            outline: none;
+            border-color: var(--border-focus);
+            background-color: hsl(from var(--bg-form-element) h s calc(l + 5%)); /* Lighten on focus, CSS native */
+            box-shadow: 0 0 0 3px rgba(var(--shadow-color-accent-rgb), 0.25), inset 0 1px 2px rgba(0,0,0,0.2);
+            transform: scale(1.01); 
+        }
+        
+        .form-input.readonly-ticket {
+            background-color: rgba(var(--shadow-color-accent-rgb), 0.05) !important;
+            color: var(--text-medium);
+            border-style: dashed;
+        }
+
+        .form-label {
+            display: block;
+            font-size: 0.8rem; 
+            font-weight: 600; 
+            color: var(--text-medium);
+            margin-bottom: 0.375rem; 
+            text-transform: uppercase; 
+            letter-spacing: 0.05em;
+        }
+
+        /* Titles */
+        .page-main-title {
+            color: var(--text-light);
+            font-weight: 800; 
+            font-size: 2rem; 
+            position: relative;
+            display: inline-block;
+            text-shadow: 0 0 10px rgba(var(--shadow-color-accent-rgb),0.3);
+        }
+
+        .page-main-title::after {
+            content: '';
+            position: absolute;
+            left: 0;
+            bottom: -10px; 
+            width: 70%;
+            height: 4px; 
+            background: var(--brand-gradient);
+            border-radius: 2px;
+            box-shadow: 0 0 8px var(--shadow-color-accent);
+        }
+
+        .section-title {
+            color: var(--text-light);
+            font-weight: 700;
+            font-size: 1.375rem;
+            position: relative;
+            display: inline-block;
+        }
+
+        .section-title::after {
+            content: '';
+            position: absolute;
+            left: 0;
+            bottom: -6px;
+            width: 50px;
+            height: 3px;
+            background: var(--brand-primary-accent);
+            border-radius: 1.5px;
+        }
+
+        /* Progress Bar */
+        .progress-bar-track {
+            background-color: rgba(var(--shadow-color-accent-rgb), 0.1);
+            height: 0.5rem; 
+            border-radius: 0.25rem;
+            overflow: hidden;
+            box-shadow: inset 0 1px 2px rgba(0,0,0,0.4);
+        }
+
+        .progress-bar-fill {
+            /* Default to low color, JS will update */
+            background: var(--progress-low); 
+            height: 100%;
+            border-radius: 0.25rem;
+            /* Added background transition */
+            transition: width var(--transition-speed-slow) cubic-bezier(0.25, 1, 0.5, 1), background var(--transition-speed-medium) ease; 
+            box-shadow: 0 0 10px var(--shadow-color-accent); /* Consider if this shadow needs to change with color */
+        }
+
+        /* Tab Navigation with Sliding Indicator */
+        .tabs-nav-container {
+            border-bottom: 2px solid var(--border-form-element); 
+            position: relative; 
+            margin-bottom: 1.5rem;
+        }
+        #tabs-nav { 
+            position: relative; 
+            padding-right: 1rem; 
+            display: flex; 
+            overflow-x: auto; 
+        }
+
+        .tab-item {
+            color: var(--text-medium);
+            padding: 0.6rem 0.7rem; 
+            margin-right: 0.25rem; 
+            font-size: 0.825rem; 
+            font-weight: 500;
+            cursor: pointer;
+            transition: all var(--transition-speed-medium) ease;
+            position: relative;
+            border-bottom: 3px solid transparent; 
+            z-index: 1;
+            white-space: nowrap; 
+            flex-shrink: 0; 
+        }
+
+        .tab-item:hover {
+            color: var(--text-light);
+            background-color: rgba(var(--shadow-color-accent-rgb), 0.05);
+        }
+
+        .tab-item.active-tab-border { 
+            color: var(--brand-primary-accent) !important;
+            font-weight: 700;
+        }
+        .tab-item.active-tab-border::after { display: none; } 
+
+        #tab-slider {
+            position: absolute;
+            bottom: -2px; 
+            height: 3px;
+            background: var(--brand-primary-accent);
+            border-radius: 1.5px;
+            transition: all var(--transition-speed-medium) cubic-bezier(0.23, 1, 0.32, 1); 
+            box-shadow: 0 0 8px var(--brand-primary-accent);
+            z-index: 2;
+        }
+
+
+        /* Buttons */
+        .btn {
+            padding: 0.75rem 1.5rem; 
+            border-radius: 0.625rem;
+            font-size: 0.9rem;
+            font-weight: 600; 
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            transition: all var(--transition-speed-medium) ease, transform var(--transition-speed-fast) ease;
+            border: 1px solid transparent;
+            text-transform: uppercase;
+            letter-spacing: 0.03em;
+            position: relative;
+            overflow: hidden; 
+        }
+        .btn i {
+            transition: transform var(--transition-speed-fast) ease;
+        }
+        .btn:hover i {
+            transform: scale(1.1);
+        }
+
+        .btn-action-dark {
+            background-color: var(--bg-form-element);
+            color: var(--text-medium);
+            border-color: var(--border-form-element);
+            box-shadow: 0 2px 5px rgba(0,0,0,0.2);
+        }
+
+        .btn-action-dark:hover {
+            background-color: hsl(from var(--bg-form-element) h s calc(l + 5%));
+            color: var(--text-light);
+            border-color: var(--brand-primary-accent);
+            transform: translateY(-2px) scale(1.02);
+            box-shadow: 0 4px 10px rgba(0,0,0,0.3), 0 0 8px rgba(var(--shadow-color-accent-rgb),0.2);
+        }
+
+        .btn-primary {
+            background: var(--brand-gradient);
+            color: var(--text-light);
+            border: none;
+            box-shadow: 0 4px 12px var(--shadow-color-accent-strong);
+        }
+         .btn-primary::before { 
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -150%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(100deg, transparent, rgba(255,255,255,0.25), transparent);
+            transition: left var(--transition-speed-slow) ease-in-out;
+        }
+        .btn-primary:hover::before {
+            left: 150%;
+        }
+
+        .btn-primary:hover:not(:disabled) {
+            background: var(--brand-gradient-hover);
+            box-shadow: 0 6px 18px var(--shadow-color-accent-strong), 0 0 15px var(--shadow-color-accent);
+            transform: translateY(-3px) scale(1.03);
+        }
+        .btn-primary:active:not(:disabled) {
+            transform: translateY(-1px) scale(1.01);
+            box-shadow: 0 3px 10px var(--shadow-color-accent);
+        }
+
+
+        .btn:disabled {
+            opacity: 0.4;
+            cursor: not-allowed;
+            box-shadow: none;
+            transform: none;
+        }
+
+        .required-star {
+            color: var(--brand-primary-accent);
+            font-weight: 700;
+            margin-left: 2px;
+        }
+
+        /* Checkbox Styling - Modernized */
+        .checkbox-container {
+            display: inline-flex;
+            align-items: center;
+            margin-right: 1.25rem;
+            margin-bottom: 0.75rem;
+            cursor: pointer;
+            position: relative;
+            color: var(--text-medium);
+            transition: color var(--transition-speed-fast);
+        }
+        .checkbox-container:hover {
+            color: var(--text-light);
+        }
+
+        .custom-checkbox {
+            position: relative;
+            height: 1.375rem; 
+            width: 1.375rem;
+            background-color: var(--bg-form-element);
+            border: 2px solid var(--border-form-element); 
+            border-radius: 0.375rem; 
+            margin-right: 0.625rem;
+            transition: all var(--transition-speed-medium) ease;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            box-shadow: inset 0 1px 2px rgba(0,0,0,0.2);
+        }
+
+        .custom-checkbox .fas { 
+            color: white;
+            font-size: 0.8rem; 
+            opacity: 0;
+            transform: scale(0.5);
+            transition: opacity var(--transition-speed-fast) ease, transform var(--transition-speed-medium) cubic-bezier(0.34, 1.56, 0.64, 1);
+        }
+
+        .checkbox-input { 
+            position: absolute;
+            opacity: 0;
+            height: 0;
+            width: 0;
+            cursor: pointer;
+        }
+
+        .checkbox-input:checked ~ .custom-checkbox {
+            background: var(--brand-gradient);
+            border-color: var(--brand-primary-accent);
+            box-shadow: 0 0 8px var(--shadow-color-accent);
+        }
+
+        .checkbox-input:checked ~ .custom-checkbox .fas {
+            opacity: 1;
+            transform: scale(1);
+        }
+
+        .checkbox-input:focus ~ .custom-checkbox {
+            box-shadow: 0 0 0 3px rgba(var(--shadow-color-accent-rgb), 0.3), 0 0 8px var(--shadow-color-accent);
+        }
+        .checkbox-container span {
+            font-size: 0.9rem;
+        }
+
+
+        /* Date Input Styling */
+        .date-input-wrapper { position: relative; }
+        input[type="date"].custom-date-input { color: var(--text-light); padding-right: 2.75rem; }
+        input[type="time"].form-input { color: var(--text-light); }
+        input[type="time"].form-input::-webkit-calendar-picker-indicator { filter: invert(1) brightness(0.8); }
+
+        input[type="date"].custom-date-input:not(:focus):not([value=""]):not([data-has-explicit-value="true"])::before {
+            content: attr(data-placeholder); position: absolute; left: 1.125rem; top: 50%;
+            transform: translateY(-50%); color: var(--text-placeholder); pointer-events: none; display: block;
+        }
+        input[type="date"].custom-date-input:focus::before,
+        input[type="date"].custom-date-input[data-has-explicit-value="true"]::before { display: none; }
+
+        .date-input-icon {
+            position: absolute; right: 1rem; top: 50%; transform: translateY(-50%);
+            color: var(--text-placeholder); pointer-events: none; font-size: 1.1em;
+        }
+        input[type="date"]::-webkit-calendar-picker-indicator {
+            opacity: 0; position: absolute; right: 0; width: 2.75rem; cursor: pointer;
+        }
+
+        /* Table Styling */
+        .data-table {
+            width: 100%; border-collapse: separate; 
+            border-spacing: 0;
+            margin-top: 1.25rem; border-radius: 0.75rem; overflow: hidden;
+            border: 1px solid var(--border-form-element);
+            box-shadow: 0 5px 15px rgba(0,0,0,0.2);
+        }
+        .data-table th, .data-table td {
+            border-bottom: 1px solid var(--border-form-element);
+            border-right: 1px solid var(--border-form-element);
+            padding: 0.875rem 1rem; text-align: left; font-size: 0.875rem;
+        }
+        .data-table th:last-child, .data-table td:last-child { border-right: 0; }
+        .data-table tr:last-child td { border-bottom: 0; }
+
+        .data-table th {
+            background: var(--brand-gradient);
+            color: var(--text-light);
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+        }
+        .data-table td { color: var(--text-medium); background-color: var(--bg-card); }
+        .data-table input.form-input { background-color: hsl(from var(--bg-form-element) h s calc(l + 5%)); padding: 0.5rem 0.75rem; font-size: 0.85rem;}
+
+
+        /* Equipment Card Styling */
+        .equipment-section-card {
+            background-color: var(--bg-form-element); 
+            border: 1px solid var(--border-form-element);
+            border-left: 5px solid var(--brand-primary-accent); 
+            border-radius: 0.875rem;
+            transition: all var(--transition-speed-medium) ease;
+            box-shadow: 0 3px 8px rgba(0,0,0,0.2);
+        }
+        .equipment-section-card:hover {
+            box-shadow: 0 6px 15px rgba(0,0,0,0.3), 0 0 10px rgba(var(--shadow-color-accent-rgb),0.1);
+            transform: translateY(-3px) scale(1.01);
+            border-left-color: var(--brand-secondary-accent);
+        }
+        .equipment-section-card h3 {
+            font-weight: 700;
+        }
+
+        /* File Input Styling */
+        .file-input-label {
+            padding: 0.75rem 1.5rem; background: var(--brand-gradient);
+            color: var(--text-light); border-radius: 0.625rem; cursor: pointer;
+            transition: all var(--transition-speed-medium) ease; display: inline-flex;
+            align-items: center; font-weight: 600; text-transform: uppercase; letter-spacing: 0.03em;
+            box-shadow: 0 4px 12px var(--shadow-color-accent);
+        }
+        .file-input-label:hover {
+            box-shadow: 0 6px 18px var(--shadow-color-accent-strong), 0 0 15px var(--shadow-color-accent);
+            transform: translateY(-2px) scale(1.02);
+        }
+        .file-name-display { font-size: 0.9rem; color: var(--text-medium); margin-left: 1rem; }
+
+        /* Footer Styling */
+        .footer-bg {
+            background-color: var(--footer-bg); position: relative; overflow: hidden;
+            border-top: 1px solid rgba(var(--shadow-color-accent-rgb), 0.1);
+            padding-top: 2.5rem; padding-bottom: 2.5rem;
+        }
+        .footer-bg::after { 
+            content: ''; position: absolute; bottom: 0; left: 0;
+            width: 100%; height: 100%;
+            background: linear-gradient(to top, rgba(var(--shadow-color-accent-rgb),0.05), transparent 40%);
+            opacity: 0.5; z-index: 0; pointer-events: none;
+        }
+        .footer-contact-item {
+            display: flex; align-items: center; margin-bottom: 0.75rem;
+            font-size: 0.9rem; color: var(--text-medium);
+        }
+        .footer-contact-item i {
+            margin-right: 0.875rem; width: 22px; text-align: center;
+            color: var(--brand-primary-accent); font-size: 1.1em;
+        }
+        .footer-contact-item a {
+            color: var(--brand-primary-accent); text-decoration: none;
+            transition: all var(--transition-speed-fast) ease;
+        }
+        .footer-contact-item a:hover {
+            text-decoration: none; color: var(--brand-secondary-accent);
+            filter: brightness(1.2);
+        }
+
+        /* Ping Button Styling */
+        .ping-button {
+            width: 80px; height: 80px; 
+            background: var(--brand-gradient);
+            border-radius: 50%; display: flex; align-items: center; justify-content: center;
+            font-weight: 700; font-size: 1.1rem; color: white;
+            box-shadow: 0 8px 25px var(--shadow-color-accent-strong), 0 0 0 0 rgba(var(--shadow-color-accent-rgb), 0.7);
+            margin: 1.5rem auto;
+            transition: all var(--transition-speed-medium) ease;
+            border: 3px solid rgba(255,255,255,0.15); 
+            animation: pulse-ping 2s infinite cubic-bezier(0.66, 0, 0, 1);
+        }
+        @keyframes pulse-ping {
+            0% { box-shadow: 0 8px 25px var(--shadow-color-accent-strong), 0 0 0 0 rgba(var(--shadow-color-accent-rgb), 0.5); }
+            70% { box-shadow: 0 8px 25px var(--shadow-color-accent-strong), 0 0 0 15px rgba(var(--shadow-color-accent-rgb), 0); }
+            100% { box-shadow: 0 8px 25px var(--shadow-color-accent-strong), 0 0 0 0 rgba(var(--shadow-color-accent-rgb), 0); }
+        }
+        .ping-button:hover {
+            transform: scale(1.1);
+            animation-play-state: paused; 
+            box-shadow: 0 10px 30px var(--shadow-color-accent-strong);
+        }
+
+        /* Profile Card Styling */
+        .profile-card {
+            position: relative; padding: 2rem; border-radius: 1rem;
+            background-color: var(--bg-card); margin-bottom: 2rem;
+            transition: all var(--transition-speed-medium) ease;
+            border: 1px solid var(--border-form-element);
+            box-shadow: 0 8px 20px rgba(0,0,0,0.25);
+        }
+        .profile-card::before { 
+            content: ''; position: absolute; top: 0; right: 0;
+            width: 40%; height: 30%;
+            background: var(--brand-gradient);
+            clip-path: polygon(100% 0, 0 0, 100% 100%);
+            opacity: 0.3; border-top-right-radius: 1rem;
+        }
+
+        /* Declaration Box */
+        .declaration-box {
+            background-color: var(--bg-form-element);
+            border: 1px solid var(--border-form-element);
+            border-left: 5px solid var(--brand-primary-accent);
+            padding: 1.5rem; border-radius: 0.875rem;
+            box-shadow: 0 3px 8px rgba(0,0,0,0.15);
+        }
+        .declaration-box h4 { font-weight: 600; }
+
+        /* Feedback Message */
+        #feedback-message {
+            position: fixed; bottom: 25px; left: 50%;
+            transform: translateX(-50%) translateY(100%); 
+            background: var(--brand-gradient); color: white;
+            padding: 0.875rem 1.75rem; border-radius: 0.625rem;
+            box-shadow: 0 5px 20px rgba(0,0,0,0.3);
+            z-index: 1001; 
+            opacity: 0;
+            transition: opacity var(--transition-speed-medium) ease-in-out, transform var(--transition-speed-medium) ease-in-out;
+            pointer-events: none; font-weight: 500;
+        }
+        #feedback-message.show {
+            opacity: 1;
+            transform: translateX(-50%) translateY(0);
+        }
+
+        /* Enhanced Glow Effects - Animated */
+        .glow-effect {
+            position: fixed; 
+            width: 300px; height: 300px; 
+            background: radial-gradient(circle, var(--brand-primary-accent) 0%, transparent 60%);
+            opacity: 0; 
+            border-radius: 50%;
+            filter: blur(50px); 
+            z-index: -1; 
+            pointer-events: none;
+            animation: fadeInGlow 3s forwards, moveGlow 25s infinite linear alternate;
+        }
+        @keyframes fadeInGlow {
+            to { opacity: 0.08; } 
+        }
+        @keyframes moveGlow {
+            0% { transform: translate(-20%, -20%) rotate(0deg) scale(1); }
+            25% { transform: translate(20%, -15%) rotate(45deg) scale(1.2); }
+            50% { transform: translate(-15%, 25%) rotate(90deg) scale(0.9); }
+            75% { transform: translate(25%, 20%) rotate(135deg) scale(1.1); }
+            100% { transform: translate(-20%, -20%) rotate(180deg) scale(1); }
+        }
+        .glow-1 { top: 5%; left: -5%; animation-delay: 0s; width: 350px; height: 350px; }
+        .glow-2 {
+            bottom: 2%; right: -8%;
+            background: radial-gradient(circle, var(--brand-secondary-accent) 0%, transparent 65%);
+            animation-delay: 1.5s; 
+            animation-duration: 30s;
+            width: 400px; height: 400px;
+            opacity: 0; 
+            animation: fadeInGlow 3s 1.5s forwards, moveGlow 30s 1.5s infinite linear alternate; 
+        }
+        @keyframes subtleRotate {
+            from { transform: rotate(0deg); }
+            to { transform: rotate(360deg); }
+        }
+
+
+        /* Toggle Switch */
+        .toggle-switch { position: relative; display: inline-block; width: 56px; height: 28px; }
+        .toggle-switch input { opacity: 0; width: 0; height: 0; }
+        .toggle-slider {
+            position: absolute; cursor: pointer; top: 0; left: 0; right: 0; bottom: 0;
+            background-color: var(--bg-form-element);
+            transition: var(--transition-speed-medium); border-radius: 28px;
+            border: 1px solid var(--border-form-element);
+        }
+        .toggle-slider:before {
+            position: absolute; content: ""; height: 20px; width: 20px;
+            left: 3px; bottom: 3px;
+            background-color: white; transition: var(--transition-speed-medium);
+            border-radius: 50%; box-shadow: 0 1px 3px rgba(0,0,0,0.3);
+        }
+        input:checked + .toggle-slider { background: var(--brand-gradient); border-color: transparent; }
+        input:focus + .toggle-slider { box-shadow: 0 0 0 3px rgba(var(--shadow-color-accent-rgb),0.3); }
+        input:checked + .toggle-slider:before { transform: translateX(28px); }
+
+        /* Responsive Adaptations */
+        @media (max-width: 640px) {
+            .page-main-title { font-size: 1.625rem; }
+            .section-title { font-size: 1.125rem; }
+            .glow-1, .glow-2 { width: 200px; height: 200px; filter: blur(40px); }
+            /* .form-container { padding: 1.25rem; } */ /* Default mobile padding is 1.5rem, this would override */
+            .btn { padding: 0.625rem 1rem; font-size: 0.85rem; }
+            .ping-button { width: 60px; height: 60px; font-size: 0.9rem; }
+            .tabs-nav-container { margin-bottom: 1rem; }
+            .tab-item { 
+                padding: 0.5rem 0.5rem; 
+                font-size: 0.725rem; 
+                margin-right: 0.15rem; 
+            }
+             #tabs-nav {
+                padding-right: 0.5rem; 
+            }
+        }
+
+    </style>
+</head>
+<body>
+    <div class="particle-background" id="particle-bg"></div>
+
+    <div class="glow-effect glow-1"></div>
+    <div class="glow-effect glow-2"></div>
+
+    <header class="geometric-header-bg">
+        <div class="container mx-auto px-4 sm:px-6 py-4 sm:py-5 flex justify-between items-center max-w-screen-xl header-content">
+            <div>
+                <img src="https://grupoangbu.com/wp-content/uploads/2024/12/cropped-cropped-ANGBU-LDA-With-border-Transparent-768x199.webp" alt="Grupo Angbu LDA Logo" class="h-10 sm:h-12 w-auto" onerror="this.style.display='none'; this.alt='Logo Grupo Angbu indisponível';">
+            </div>
+            <div class="text-right">
+                <h1 class="text-2xl sm:text-3xl font-bold text-white leading-tight">Ficha Técnica</h1>
+                <p class="text-xs sm:text-sm text-gray-300">Instalação e Intervenção</p>
+            </div>
+        </div>
+    </header>
+
+    <main class="container mx-auto px-4 sm:px-6 py-8 sm:py-12 max-w-4xl">
+        <h1 class="page-main-title mb-10 text-center sm:text-left">Formulário de Serviço Técnico</h1>
+
+        <div class="form-container">
+            <form id="main-technical-form">
+                <div class="flex flex-col sm:flex-row justify-between items-center mb-8 space-y-5 sm:space-y-0">
+                    <div class="w-full sm:w-2/5">
+                        <label for="form-completion" class="form-label">Progresso</label>
+                        <div class="w-full progress-bar-track rounded-md mt-1">
+                            <div class="progress-bar-fill" style="width: 0%" id="progress-bar-fill"></div>
+                        </div>
+                         <p id="form-completion-text" class="text-xs mt-1 opacity-75">0% Concluído</p>
+                    </div>
+                    <div class="flex space-x-3 w-full sm:w-auto sm:flex-nowrap">
+                        <button type="button" id="save-progress-btn" class="btn btn-action-dark flex-1 sm:flex-none">
+                            <i class="fas fa-save mr-2"></i>Guardar
+                        </button>
+                        <button type="button" id="reset-form-btn" class="btn btn-action-dark flex-1 sm:flex-none">
+                            <i class="fas fa-undo mr-2"></i>Repor
+                        </button>
+                        <button type="submit" id="submit-form-btn" class="btn btn-primary flex-1 sm:flex-none" disabled>
+                            <i class="fas fa-paper-plane mr-2"></i>Submeter
+                        </button>
+                    </div>
+                </div>
+
+                <div class="tabs-nav-container">
+                    <nav class="flex -mb-px" id="tabs-nav">
+                        <a href="#" data-tab="clientInfo" class="tab-item active-tab-border whitespace-nowrap">1 Cliente</a>
+                        <a href="#" data-tab="intervention" class="tab-item whitespace-nowrap">2 Intervenção</a>
+                        <a href="#" data-tab="equipment" class="tab-item whitespace-nowrap">3 Equipamento</a>
+                        <a href="#" data-tab="materials" class="tab-item whitespace-nowrap">4 Materiais</a>
+                        <a href="#" data-tab="report" class="tab-item whitespace-nowrap">5 Relatório</a>
+                        <a href="#" data-tab="evaluation" class="tab-item whitespace-nowrap">6 Avaliação</a>
+                        <a href="#" data-tab="agreement" class="tab-item whitespace-nowrap">7 Acordo</a>
+                    </nav>
+                    <div id="tab-slider"></div> 
+                </div>
+
+                <div id="tab-content" class="pt-6">
+                    <div id="clientInfo" class="tab-pane active">
+                        <h2 class="section-title mb-8">Informação do Cliente</h2>
+                        <div class="profile-card">
+                            <div class="space-y-5">
+                                <div>
+                                    <label for="client_name" class="form-label">Nome do Cliente <span class="required-star">*</span></label>
+                                    <input type="text" id="client_name" name="client_name" class="form-input" placeholder="Insira o nome completo do cliente" required>
+                                </div>
+                                <div>
+                                    <label for="contact_person" class="form-label">Pessoa de Contacto</label>
+                                    <input type="text" id="contact_person" name="contact_person" class="form-input" placeholder="Nome da pessoa de contacto no local">
+                                </div>
+                                <div>
+                                    <label for="phone_number" class="form-label">Número de Telefone <span class="required-star">*</span></label>
+                                    <input type="tel" id="phone_number" name="phone_number" class="form-input" placeholder="Ex: 9XX XXX XXX" required>
+                                </div>
+                                <div>
+                                    <label for="email_address" class="form-label">Endereço de Email</label>
+                                    <input type="email" id="email_address" name="email_address" class="form-input" placeholder="Ex: email@dominio.com">
+                                </div>
+                                <div>
+                                    <label for="service_address" class="form-label">Morada do Serviço</label>
+                                    <input type="text" id="service_address" name="service_address" class="form-input" placeholder="Rua, Número, Localidade">
+                                </div>
+                                <div>
+                                    <label for="planned_service_date" class="form-label">Data de Serviço Agendada <span class="required-star">*</span></label>
+                                    <div class="date-input-wrapper">
+                                        <input type="date" id="planned_service_date" name="planned_service_date" class="form-input custom-date-input" data-placeholder="AAAA/MM/DD" required>
+                                        <i class="far fa-calendar-alt date-input-icon"></i>
+                                    </div>
+                                </div>
+                                <div>
+                                    <label for="ticket_reference" class="form-label">Número de Referência do Pedido</label>
+                                    <input type="text" id="ticket_reference" name="ticket_reference" class="form-input readonly-ticket" value="ANG-AAAAMMDD-XXXX" readonly>
+                                    <p class="text-xs mt-1 opacity-60">(Gerado automaticamente após seleção da data)</p>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="pt-8 flex justify-end">
+                            <button type="button" id="nextButtonClientInfo" class="btn btn-primary px-8">
+                                Próximo<i class="fas fa-arrow-right ml-3"></i>
+                            </button>
+                        </div>
+                    </div>
+
+                    <div id="intervention" class="tab-pane hidden">
+                        <h2 class="section-title mb-8">Detalhes da Intervenção</h2>
+                        <div class="space-y-6">
+                            <div>
+                                <label class="form-label mb-3">Tipo de Serviço:</label>
+                                <div class="flex flex-wrap gap-y-3 gap-x-5">
+                                    <label class="checkbox-container"><input type="checkbox" class="checkbox-input" name="service_type[]" value="installation"><div class="custom-checkbox"><i class="fas fa-check"></i></div><span>Instalação</span></label>
+                                    <label class="checkbox-container"><input type="checkbox" class="checkbox-input" name="service_type[]" value="repair"><div class="custom-checkbox"><i class="fas fa-check"></i></div><span>Reparação</span></label>
+                                    <label class="checkbox-container"><input type="checkbox" class="checkbox-input" name="service_type[]" value="maintenance"><div class="custom-checkbox"><i class="fas fa-check"></i></div><span>Manutenção</span></label>
+                                    <label class="checkbox-container"><input type="checkbox" class="checkbox-input" name="service_type[]" value="configuration"><div class="custom-checkbox"><i class="fas fa-check"></i></div><span>Configuração</span></label>
+                                </div>
+                            </div>
+                            <div>
+                                <label class="form-label mb-3">Área de Serviço:</label>
+                                <div class="flex flex-wrap gap-y-3 gap-x-5">
+                                    <label class="checkbox-container"><input type="checkbox" class="checkbox-input" name="service_area[]" value="telecom"><div class="custom-checkbox"><i class="fas fa-check"></i></div><span>Telecomunicações</span></label>
+                                    <label class="checkbox-container"><input type="checkbox" class="checkbox-input" name="service_area[]" value="it"><div class="custom-checkbox"><i class="fas fa-check"></i></div><span>Informática</span></label>
+                                    <label class="checkbox-container"><input type="checkbox" class="checkbox-input" name="service_area[]" value="network"><div class="custom-checkbox"><i class="fas fa-check"></i></div><span>Redes</span></label>
+                                    <div class="flex items-center checkbox-container">
+                                        <input type="checkbox" class="checkbox-input" id="service_area_other_cb" name="service_area[]" value="other"><div class="custom-checkbox"><i class="fas fa-check"></i></div>
+                                        <span class="mr-2">Outro:</span>
+                                        <input type="text" class="form-input w-48 text-sm py-2 px-3" name="service_area_other_text" id="service_area_other_text" placeholder="Especifique a área" disabled>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="grid grid-cols-1 sm:grid-cols-3 gap-5">
+                                <div><label for="subject" class="form-label">Assunto:</label><input type="text" id="subject" name="subject" class="form-input" placeholder="Breve descrição do pedido"></div>
+                                <div><label for="circuit" class="form-label">Circuito:</label><input type="text" id="circuit" name="circuit" class="form-input" placeholder="ID do circuito (se aplicável)"></div>
+                                <div><label class="form-label">POP / Sector:</label><div class="flex gap-3"><input type="text" class="form-input" name="pop" placeholder="POP"><input type="text" class="form-input" name="sector" placeholder="Sector"></div></div>
+                            </div>
+                            <div><label for="reported_situation" class="form-label">Situação Reportada:</label><textarea id="reported_situation" name="reported_situation" class="form-textarea" rows="4" placeholder="Descrição detalhada do problema conforme reportado pelo cliente"></textarea></div>
+                            <div><label for="work_description" class="form-label">Descrição do Trabalho a Realizar:</label><textarea id="work_description" name="work_description" class="form-textarea" rows="4" placeholder="Descrição das tarefas a serem executadas pelo técnico"></textarea></div>
+                            <div class="pt-8 flex justify-between">
+                                <button type="button" data-target-tab="clientInfo" class="btn btn-action-dark prev-tab-btn">
+                                    <i class="fas fa-arrow-left mr-2"></i>Anterior
+                                </button>
+                                <button type="button" data-target-tab="equipment" class="btn btn-primary next-tab-btn px-8">
+                                    Próximo<i class="fas fa-arrow-right ml-3"></i>
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+
+                     <div id="equipment" class="tab-pane hidden">
+                        <h2 class="section-title mb-8">Detalhes do Equipamento</h2>
+                        <div class="space-y-8">
+                            <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
+                                <div class="equipment-section-card p-5">
+                                    <h3 class="text-lg font-semibold mb-4 text-white">Equipamento Anterior (Retirado)</h3>
+                                    <div class="space-y-4">
+                                        <div><label class="form-label text-xs">Serial Antena:</label><input type="text" class="form-input text-sm" name="old_antenna_serial" placeholder="S/N da Antena antiga"></div>
+                                        <div><label class="form-label text-xs">Serial Router:</label><input type="text" class="form-input text-sm" name="old_router_serial" placeholder="S/N do Router antigo"></div>
+                                        <div><label class="form-label text-xs">IP Configurado:</label><input type="text" class="form-input text-sm" name="old_ip" placeholder="Endereço IP anterior"></div>
+                                        <div><label class="form-label text-xs">WiFi SSID Anterior:</label><input type="text" class="form-input text-sm" name="old_wifi_ssid" placeholder="Nome da Rede WiFi antiga"></div>
+                                        <div><label class="form-label text-xs">WiFi Password Anterior:</label><input type="text" class="form-input text-sm" name="old_wifi_password" placeholder="Senha WiFi antiga"></div>
+                                    </div>
+                                </div>
+                                <div class="equipment-section-card p-5">
+                                    <h3 class="text-lg font-semibold mb-4 text-white">Equipamento Novo (Instalado)</h3>
+                                    <div class="space-y-4">
+                                        <div><label class="form-label text-xs">Serial Antena:</label><input type="text" class="form-input text-sm" name="new_antenna_serial" placeholder="S/N da Antena nova"></div>
+                                        <div><label class="form-label text-xs">Serial Router:</label><input type="text" class="form-input text-sm" name="new_router_serial" placeholder="S/N do Router novo"></div>
+                                        <div><label class="form-label text-xs">IP Configurado:</label><input type="text" class="form-input text-sm" name="new_ip" placeholder="Endereço IP novo"></div>
+                                        <div><label class="form-label text-xs">WiFi SSID Novo:</label><input type="text" class="form-input text-sm" name="new_wifi_ssid" placeholder="Nome da Rede WiFi nova"></div>
+                                        <div><label class="form-label text-xs">WiFi Password Nova:</label><input type="text" class="form-input text-sm" name="new_wifi_password" placeholder="Senha WiFi nova"></div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="pt-8 flex justify-between">
+                                <button type="button" data-target-tab="intervention" class="btn btn-action-dark prev-tab-btn">
+                                    <i class="fas fa-arrow-left mr-2"></i>Anterior
+                                </button>
+                                <button type="button" data-target-tab="materials" class="btn btn-primary next-tab-btn px-8">
+                                    Próximo<i class="fas fa-arrow-right ml-3"></i>
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div id="materials" class="tab-pane hidden">
+                        <h2 class="section-title mb-8">Materiais Utilizados</h2>
+                        <div class="space-y-6">
+                            <div class="overflow-x-auto shadow-lg rounded-lg">
+                                <table class="data-table">
+                                    <thead>
+                                        <tr><th>Item</th><th>Qtd.</th><th>Código</th><th>Observações</th></tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr><td>Cabo UTP Outdoor</td><td><input type="number" min="0" class="form-input" name="qty_utp_outdoor" placeholder="metros"></td><td><input type="text" class="form-input" name="code_utp_outdoor" placeholder="Código do material"></td><td><input type="text" class="form-input" name="notes_utp_outdoor" placeholder="Ex: Cor, tipo"></td></tr>
+                                        <tr><td>Cabo UTP Indoor</td><td><input type="number" min="0" class="form-input" name="qty_utp_indoor" placeholder="metros"></td><td><input type="text" class="form-input" name="code_utp_indoor" placeholder="Código do material"></td><td><input type="text" class="form-input" name="notes_utp_indoor" placeholder="Ex: Cor, tipo"></td></tr>
+                                        <tr><td>Cabo RG6</td><td><input type="number" min="0" class="form-input" name="qty_rg6" placeholder="metros"></td><td><input type="text" class="form-input" name="code_rg6" placeholder="Código do material"></td><td><input type="text" class="form-input" name="notes_rg6" placeholder="Ex: Cor, tipo"></td></tr>
+                                        <tr><td>Mastro</td><td><input type="number" min="0" class="form-input" name="qty_mast" placeholder="unidades"></td><td><input type="text" class="form-input" name="code_mast" placeholder="Código do material"></td><td><input type="text" class="form-input" name="notes_mast" placeholder="Ex: Tamanho, tipo"></td></tr>
+                                        <tr><td><input type="text" class="form-input border-0 focus:ring-0 bg-transparent placeholder-text-placeholder font-semibold" placeholder="Adicionar outro material..." name="other_material_name"></td><td><input type="number" min="0" class="form-input" name="qty_other_material" placeholder="Qtd."></td><td><input type="text" class="form-input" name="code_other_material" placeholder="Código"></td><td><input type="text" class="form-input" name="notes_other_material" placeholder="Obs."></td></tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                            <div class="pt-8 flex justify-between">
+                                <button type="button" data-target-tab="equipment" class="btn btn-action-dark prev-tab-btn">
+                                    <i class="fas fa-arrow-left mr-2"></i>Anterior
+                                </button>
+                                <button type="button" data-target-tab="report" class="btn btn-primary next-tab-btn px-8">
+                                    Próximo<i class="fas fa-arrow-right ml-3"></i>
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div id="report" class="tab-pane hidden">
+                        <h2 class="section-title mb-8">Relatório de Intervenção</h2>
+                        <div class="space-y-6">
+                            <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                                <div>
+                                    <label class="form-label mb-2">Técnico 1: <span class="required-star">*</span></label>
+                                    <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                                        <input type="text" class="form-input" name="tech1_name" placeholder="Nome do Técnico" required>
+                                        <input type="tel" class="form-input" name="tech1_tel" placeholder="Contacto Telefónico">
+                                    </div>
+                                </div>
+                                <div>
+                                    <label class="form-label mb-2">Técnico 2: (Opcional)</label>
+                                    <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                                        <input type="text" class="form-input" name="tech2_name" placeholder="Nome do Técnico">
+                                        <input type="tel" class="form-input" name="tech2_tel" placeholder="Contacto Telefónico">
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="grid grid-cols-1 sm:grid-cols-3 gap-5">
+                                <div><label for="start_time" class="form-label">Hora de Início:</label><input type="time" id="start_time" class="form-input" name="start_time"></div>
+                                <div><label for="end_time" class="form-label">Hora de Fim:</label><input type="time" id="end_time" class="form-input" name="end_time"></div>
+                                <div><label for="work_date" class="form-label">Data da Intervenção: <span class="required-star">*</span></label><div class="date-input-wrapper"><input type="date" id="work_date" class="form-input custom-date-input" data-placeholder="AAAA/MM/DD" name="work_date" required><i class="far fa-calendar-alt date-input-icon"></i></div></div>
+                            </div>
+                            <div><label for="intervention_details" class="form-label">Detalhes da Intervenção Realizada: <span class="required-star">*</span></label><textarea id="intervention_details" class="form-textarea h-32" name="intervention_details" placeholder="Descreva em detalhe os passos tomados, diagnósticos efetuados, soluções aplicadas, testes realizados, e quaisquer outras observações relevantes sobre a intervenção." required></textarea></div>
+                            <div class="pt-8 flex justify-between">
+                                <button type="button" data-target-tab="materials" class="btn btn-action-dark prev-tab-btn">
+                                    <i class="fas fa-arrow-left mr-2"></i>Anterior
+                                </button>
+                                <button type="button" data-target-tab="evaluation" class="btn btn-primary next-tab-btn px-8">
+                                    Próximo<i class="fas fa-arrow-right ml-3"></i>
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div id="evaluation" class="tab-pane hidden">
+                        <h2 class="section-title mb-8">Anexos e Avaliação do Cliente</h2>
+                        <div class="space-y-7">
+                            <div>
+                                <label for="file_attachment_input_actual" class="form-label mb-3">Anexar Documento/Imagem (Ex: Teste de Velocidade, Foto da Instalação):</label>
+                                <div class="flex items-center flex-wrap gap-y-3">
+                                    <label for="file_attachment_input_actual" class="file-input-label">
+                                        <i class="fas fa-cloud-upload-alt mr-3"></i>
+                                        <span>Escolher Ficheiro</span>
+                                    </label>
+                                    <input type="file" id="file_attachment_input_actual" name="file_attachment" class="hidden">
+                                    <span id="file_attachment_name" class="file-name-display">Nenhum ficheiro selecionado</span>
+                                </div>
+                                <p class="mt-2 text-xs opacity-60">Tipos permitidos: PDF, JPG, PNG, GIF. Tamanho Máximo: 5MB.</p>
+                            </div>
+                            <div>
+                                <label for="evaluation_notes" class="form-label">Notas de Avaliação do Serviço (Feedback do Cliente, se aplicável):</label>
+                                <textarea id="evaluation_notes" name="evaluation_notes" class="form-textarea" rows="5" placeholder="Observações sobre a qualidade do serviço, satisfação do cliente, sugestões, etc."></textarea>
+                            </div>
+                            <div class="pt-8 flex justify-between">
+                                <button type="button" data-target-tab="report" class="btn btn-action-dark prev-tab-btn">
+                                    <i class="fas fa-arrow-left mr-2"></i>Anterior
+                                </button>
+                                <button type="button" data-target-tab="agreement" class="btn btn-primary next-tab-btn px-8">
+                                    Próximo<i class="fas fa-arrow-right ml-3"></i>
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div id="agreement" class="tab-pane hidden">
+                        <h2 class="section-title mb-8">Finalização Técnica e Acordo</h2>
+                        <div class="space-y-7">
+                            <div>
+                                <label for="report_date" class="form-label">Data do Relatório (Preenchimento): <span class="required-star">*</span></label>
+                                <div class="date-input-wrapper max-w-sm">
+                                    <input type="date" id="report_date" class="form-input custom-date-input" data-placeholder="AAAA/MM/DD" name="report_date" required>
+                                    <i class="far fa-calendar-alt date-input-icon"></i>
+                                </div>
+                            </div>
+                            <div class="declaration-box">
+                                <h4 class="text-md font-semibold text-white mb-3">Declaração do Técnico Responsável:</h4>
+                                <p class="text-sm mb-5 leading-relaxed">
+                                    Declaro solenemente que a intervenção técnica descrita neste formulário foi realizada em conformidade com as normas técnicas vigentes, as boas práticas da indústria e as especificações do serviço. As informações aqui prestadas são verdadeiras, precisas e completas, refletindo fielmente os trabalhos executados. Todos os equipamentos instalados e/ou reparados foram devidamente testados e encontram-se em pleno funcionamento na data de conclusão desta intervenção.
+                                </p>
+                                <label class="checkbox-container">
+                                    <input type="checkbox" class="checkbox-input" id="tech_agreement_cb" name="tech_agreement" required>
+                                    <div class="custom-checkbox"><i class="fas fa-check"></i></div>
+                                    <span class="font-medium text-sm">Li, compreendi e confirmo a declaração acima.</span>
+                                </label>
+                            </div>
+                            
+                            <div class="my-10 flex justify-center">
+                                <div class="ping-button" title="Testar Conectividade (Simulado)">
+                                    TESTAR </div>
+                            </div>
+                            
+                            <div class="pt-8 flex justify-between items-center">
+                                <button type="button" data-target-tab="evaluation" class="btn btn-action-dark prev-tab-btn">
+                                    <i class="fas fa-arrow-left mr-2"></i>Anterior
+                                </button>
+                                <button type="submit" id="submit-final-btn" class="btn btn-primary py-3 px-10 text-base" disabled>
+                                    <i class="fas fa-paper-plane mr-3"></i>Submeter Formulário
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </div> </form>
+        </div> </main>
+
+    <footer class="footer-bg mt-16">
+        <div class="container mx-auto px-4 sm:px-6 flex flex-col md:flex-row justify-between items-center max-w-5xl relative z-10">
+            <div class="mb-6 md:mb-0 text-center md:text-left">
+                <img src="https://grupoysam.com/wp-content/uploads/2025/05/Tchiowa-Net.webp" alt="Tchiowa Net Logo" class="h-16 sm:h-20 mb-4 mx-auto md:mx-0" onerror="this.style.display='none'; this.alt='Logo Tchiowa Net indisponível'">
+                <p class="text-xs text-gray-400">&copy; <span id="currentYear"></span> Grupo Angbu & Tchiowa Net. Todos os direitos reservados.</p>
+            </div>
+            <div class="text-center md:text-right">
+                <div class="footer-contact-item justify-center md:justify-end">
+                    <i class="fas fa-phone-alt"></i>
+                    <span>+244 946 503 710 / +244 913 226 684</span>
+                </div>
+                <div class="footer-contact-item justify-center md:justify-end">
+                    <i class="fas fa-envelope"></i>
+                    <span><a href="mailto:info@grupoangbu.com">info@grupoangbu.com</a></span>
+                </div>
+                <div class="footer-contact-item justify-center md:justify-end">
+                    <i class="fas fa-globe"></i>
+                    <span><a href="https://www.grupoangbu.com" target="_blank" rel="noopener noreferrer">www.grupoangbu.com</a></span>
+                </div>
+                <div class="footer-contact-item justify-center md:justify-end">
+                    <i class="fas fa-map-marker-alt"></i>
+                    <span>Bairro Deolinda Rodrigues, Cabinda, Angola</span>
+                </div>
+            </div>
+        </div>
+    </footer>
+
+    <div id="feedback-message" role="alert" aria-live="polite"></div>
+
+    <script>
+    document.addEventListener('DOMContentLoaded', function() {
+        // --- Core Elements ---
+        const mainForm = document.getElementById('main-technical-form');
+        const tabsNav = document.getElementById('tabs-nav');
+        const tabSlider = document.getElementById('tab-slider');
+        const tabPanes = document.querySelectorAll('#tab-content .tab-pane');
+        const nextButtons = document.querySelectorAll('.next-tab-btn');
+        const prevButtons = document.querySelectorAll('.prev-tab-btn');
+        const nextButtonClientInfo = document.getElementById('nextButtonClientInfo');
+        
+        // --- Form Control Buttons ---
+        const saveProgressBtn = document.getElementById('save-progress-btn');
+        const resetFormBtn = document.getElementById('reset-form-btn');
+        const submitFormBtn = document.getElementById('submit-form-btn'); // Top submit
+        const submitFinalBtn = document.getElementById('submit-final-btn'); // Final submit
+        const feedbackMessageEl = document.getElementById('feedback-message');
+        const localStorageKey = 'savedTechnicalFormProgress_v4_insane_ui_fix_v3_color_progress';
+
+        // --- Particle Background ---
+        const particleBg = document.getElementById('particle-bg');
+        if (particleBg) { 
+            const numParticles = 30; 
+            for (let i = 0; i < numParticles; i++) {
+                let particle = document.createElement('div');
+                particle.classList.add('particle');
+                particle.style.width = `${Math.random() * 3 + 1}px`; 
+                particle.style.height = particle.style.width;
+                particle.style.left = `${Math.random() * 100}%`;
+                particle.style.top = `${Math.random() * 100}%`;
+                particle.style.animationDelay = `${Math.random() * 20}s`;
+                particle.style.animationDuration = `${Math.random() * 15 + 15}s`; 
+                if (Math.random() > 0.5) { 
+                     particle.style.backgroundColor = 'var(--brand-secondary-accent)';
+                }
+                particleBg.appendChild(particle);
+            }
+        }
+        const currentYearEl = document.getElementById('currentYear');
+        if (currentYearEl) {
+            currentYearEl.textContent = new Date().getFullYear();
+        }
+
+
+        // --- Show Feedback Message ---
+        function showFeedback(message, type = 'info') {
+            if (!feedbackMessageEl) return;
+            feedbackMessageEl.textContent = message;
+            feedbackMessageEl.className = 'show'; 
+            feedbackMessageEl.style.background = ''; 
+
+            if (type === 'error') {
+                feedbackMessageEl.style.background = 'linear-gradient(135deg, #E53E3E, #C53030)';
+            } else if (type === 'success') {
+                feedbackMessageEl.style.background = 'linear-gradient(135deg, #48BB78, #38A169)';
+            } else { // Default to brand gradient for info
+                feedbackMessageEl.style.background = 'var(--brand-gradient)';
+            }
+            setTimeout(() => {
+                feedbackMessageEl.classList.remove('show');
+            }, 3500); 
+        }
+
+        // --- Tab Navigation & Sliding Indicator ---
+        function updateTabSlider(activeTabLink) {
+            if (!activeTabLink || !tabSlider) return;
+            tabSlider.style.width = `${activeTabLink.offsetWidth}px`;
+            tabSlider.style.left = `${activeTabLink.offsetLeft}px`;
+        }
+
+        function setActiveTab(targetTabId, isInitialLoad = false) {
+            if (!tabsNav || !tabPanes.length) return; 
+            let newActiveTabLink = null;
+            tabsNav.querySelectorAll('a.tab-item').forEach(tabLink => {
+                const isActive = tabLink.dataset.tab === targetTabId;
+                tabLink.classList.toggle('active-tab-border', isActive);
+                if (isActive) newActiveTabLink = tabLink;
+            });
+            
+            tabPanes.forEach(pane => {
+                pane.classList.toggle('hidden', pane.id !== targetTabId);
+                pane.classList.toggle('active', pane.id === targetTabId);
+            });
+            
+            if (newActiveTabLink) {
+                if (!isInitialLoad && typeof newActiveTabLink.scrollIntoView === 'function') { 
+                    newActiveTabLink.scrollIntoView({ behavior: 'smooth', block: 'nearest', inline: 'center' });
+                }
+                updateTabSlider(newActiveTabLink);
+            }
+            checkAllMandatoryFields(); // Also updates progress bar
+        }
+        
+        if (tabsNav && tabSlider) {
+            const resizeObserver = new ResizeObserver(() => {
+                const activeTab = tabsNav.querySelector('a.tab-item.active-tab-border');
+                if (activeTab) updateTabSlider(activeTab);
+            });
+            resizeObserver.observe(tabsNav);
+        }
+
+
+        // --- Validation ---
+        function validateCurrentTabFields(tabPaneElement) {
+            if (!tabPaneElement) return true;
+            const requiredFieldsInTab = Array.from(tabPaneElement.querySelectorAll('[required]:not(:disabled)'));
+            if (requiredFieldsInTab.length === 0) return true;
+            for (const field of requiredFieldsInTab) {
+                if (field.type === 'checkbox' ? !field.checked : field.value.trim() === '') return false;
+            }
+            return true;
+        }
+
+        // --- Event Handlers for Tabs and Buttons ---
+        if (tabsNav) {
+            tabsNav.addEventListener('click', function(event) {
+                event.preventDefault();
+                const clickedTabLink = event.target.closest('a.tab-item');
+                if (!clickedTabLink) return;
+                
+                const targetTabId = clickedTabLink.dataset.tab;
+                const currentActiveTabPane = document.querySelector('#tab-content .tab-pane.active');
+                const currentActiveTabId = currentActiveTabPane ? currentActiveTabPane.id : null;
+                
+                if (currentActiveTabId && targetTabId !== currentActiveTabId) {
+                    const tabLinksArray = Array.from(tabsNav.querySelectorAll('a.tab-item'));
+                    const currentTabIndex = tabLinksArray.findIndex(link => link.dataset.tab === currentActiveTabId);
+                    const targetTabIndex = tabLinksArray.findIndex(link => link.dataset.tab === targetTabId);
+                    
+                    if (targetTabIndex > currentTabIndex && !validateCurrentTabFields(currentActiveTabPane)) {
+                        showFeedback('Por favor, preencha todos os campos obrigatórios na secção atual antes de avançar.', 'error');
+                        return;
+                    }
+                }
+                setActiveTab(targetTabId);
+            });
+        }
+
+        if(nextButtonClientInfo) {
+            nextButtonClientInfo.addEventListener('click', function() {
+                const currentTabPane = document.getElementById('clientInfo');
+                if (validateCurrentTabFields(currentTabPane)) {
+                     setActiveTab('intervention');
+                } else {
+                    showFeedback('Por favor, preencha todos os campos obrigatórios nesta secção.', 'error');
+                }
+            });
+        }
+
+        nextButtons.forEach(button => {
+            if (button.id === 'nextButtonClientInfo') return; // Already handled
+            button.addEventListener('click', function() {
+                const currentTabPane = button.closest('.tab-pane.active');
+                if (currentTabPane && validateCurrentTabFields(currentTabPane)) {
+                    setActiveTab(this.dataset.targetTab);
+                } else if (currentTabPane) {
+                    showFeedback('Por favor, preencha todos os campos obrigatórios nesta secção.', 'error');
+                } else {
+                    setActiveTab(this.dataset.targetTab);
+                }
+            });
+        });
+
+        prevButtons.forEach(button => {
+            button.addEventListener('click', function() {
+                setActiveTab(this.dataset.targetTab);
+            });
+        });
+
+        // --- Ticket Reference Generation ---
+        const plannedDateInput = document.getElementById('planned_service_date');
+        const ticketRefInput = document.getElementById('ticket_reference');
+        const initialTicketRefValue = "ANG-AAAAMMDD-XXXX"; 
+
+        function generateTicketReference(dateString) {
+            if (!dateString) return initialTicketRefValue;
+            const date = new Date(dateString);
+            if (isNaN(date.getTime())) { 
+                return initialTicketRefValue; 
+            }
+            const year = date.getFullYear();
+            const month = String(date.getMonth() + 1).padStart(2, '0');
+            const day = String(date.getDate()).padStart(2, '0');
+            const randomSuffix = String(Math.floor(Math.random() * 9000) + 1000);
+            return `ANG-${year}${month}${day}-${randomSuffix}`;
+        }
+        
+        if (ticketRefInput) {
+            ticketRefInput.value = initialTicketRefValue; 
+        }
+
+        if (plannedDateInput && ticketRefInput) {
+            plannedDateInput.addEventListener('change', function() {
+                ticketRefInput.value = generateTicketReference(this.value);
+            });
+        }
+
+        // --- Date Input Placeholder Handling ---
+        document.querySelectorAll('input[type="date"].custom-date-input').forEach(dateInput => {
+            const updateDateValueState = () => {
+                dateInput.setAttribute('data-has-explicit-value', (dateInput.value && dateInput.value !== "") ? 'true' : 'false');
+            }
+            updateDateValueState(); 
+            dateInput.addEventListener('change', updateDateValueState);
+            dateInput.addEventListener('input', updateDateValueState); 
+        });
+
+        // --- Progress Tracking & Submit Button Enabling ---
+        const progressBarFill = document.getElementById('progress-bar-fill');
+        const formCompletionTextEl = document.getElementById('form-completion-text'); 
+
+        function updateProgress() {
+            if (!mainForm || !progressBarFill || !formCompletionTextEl) return;
+            const requiredFields = Array.from(mainForm.querySelectorAll('[required]:not(:disabled)'));
+            const totalRequired = requiredFields.length;
+
+            let completionPercentage = 0;
+            if (totalRequired > 0) {
+                const filledRequired = requiredFields.filter(field => (field.type === 'checkbox' ? field.checked : field.value.trim() !== '')).length;
+                completionPercentage = Math.round((filledRequired / totalRequired) * 100);
+            } else if (totalRequired === 0) {
+                completionPercentage = 100; 
+                formCompletionTextEl.textContent = 'N/A';
+            }
+            
+            progressBarFill.style.width = `${completionPercentage}%`;
+            if (totalRequired > 0) {
+                 formCompletionTextEl.textContent = `${completionPercentage}% Concluído`;
+            }
+
+            if (completionPercentage < 33) {
+                progressBarFill.style.background = 'var(--progress-low)';
+            } else if (completionPercentage < 66) {
+                progressBarFill.style.background = 'var(--progress-medium)';
+            } else if (completionPercentage < 100) {
+                progressBarFill.style.background = 'var(--progress-high)';
+            } else { 
+                progressBarFill.style.background = 'var(--progress-complete)';
+            }
+        }
+
+
+        function checkAllMandatoryFields() {
+            if (!mainForm) return false;
+            const requiredFields = Array.from(mainForm.querySelectorAll('[required]:not(:disabled)'));
+            let allFilled = true;
+            if (requiredFields.length === 0) { 
+                allFilled = true;
+            } else {
+                for (const field of requiredFields) {
+                    if (field.type === 'checkbox' ? !field.checked : field.value.trim() === '') {
+                        allFilled = false; 
+                        break;
+                    }
+                }
+            }
+            
+            if(submitFormBtn) submitFormBtn.disabled = !allFilled;
+            if (submitFinalBtn) submitFinalBtn.disabled = !allFilled;
+            
+            updateProgress(); 
+            return allFilled;
+        }
+
+        if (mainForm) {
+            mainForm.querySelectorAll('input, textarea, select').forEach(field => {
+                const eventType = (field.type === 'checkbox' || field.type === 'date' || field.tagName.toLowerCase() === 'select' || field.type === 'radio') ? 'change' : 'input';
+                field.addEventListener(eventType, checkAllMandatoryFields);
+            });
+        }
+
+        // --- LocalStorage: Save & Load Progress ---
+        if (saveProgressBtn) {
+            saveProgressBtn.addEventListener('click', function() {
+                const formElements = mainForm.elements;
+                const dataToSave = {};
+                for (let i = 0; i < formElements.length; i++) {
+                    const el = formElements[i];
+                    if (el.name) {
+                        if (el.type === 'checkbox') {
+                            if (el.name.endsWith('[]')) { 
+                                if (!dataToSave[el.name]) dataToSave[el.name] = [];
+                                if (el.checked) dataToSave[el.name].push(el.value);
+                            } else { dataToSave[el.name] = el.checked; }
+                        } else if (el.type === 'radio') {
+                            if (el.checked) dataToSave[el.name] = el.value;
+                        } else { dataToSave[el.name] = el.value; }
+                    }
+                }
+                localStorage.setItem(localStorageKey, JSON.stringify(dataToSave));
+                showFeedback('Progresso guardado com sucesso!', 'success');
+            });
+        }
+
+        function loadProgress() {
+            const savedData = localStorage.getItem(localStorageKey);
+            if (savedData) {
+                const data = JSON.parse(savedData);
+                const formElements = mainForm.elements;
+                for (let i = 0; i < formElements.length; i++) {
+                    const el = formElements[i];
+                    if (el.name && data.hasOwnProperty(el.name)) {
+                        if (el.type === 'checkbox') {
+                            if (el.name.endsWith('[]')) {
+                                 el.checked = data[el.name] && data[el.name].includes(el.value);
+                            } else {
+                                 el.checked = data[el.name];
+                            }
+                        } else if (el.type === 'radio') {
+                            el.checked = (data[el.name] === el.value);
+                        } else { 
+                            el.value = data[el.name]; 
+                        }
+                        if (el.type === 'date' && el.classList.contains('custom-date-input')) {
+                            el.dispatchEvent(new Event('change', { bubbles: true }));
+                        }
+                        if (el.tagName.toLowerCase() === 'select') {
+                            el.dispatchEvent(new Event('change', { bubbles: true }));
+                        }
+                    }
+                }
+
+                if (plannedDateInput && ticketRefInput) { 
+                    if (data.planned_service_date) {
+                        ticketRefInput.value = generateTicketReference(data.planned_service_date);
+                    } else {
+                        ticketRefInput.value = initialTicketRefValue;
+                    }
+                }
+                showFeedback('Progresso anterior carregado.', 'info');
+            }
+            
+            const serviceAreaOtherCb = document.getElementById('service_area_other_cb');
+            const serviceAreaOtherText = document.getElementById('service_area_other_text');
+            if (serviceAreaOtherCb && serviceAreaOtherText) {
+                serviceAreaOtherText.disabled = !serviceAreaOtherCb.checked;
+                serviceAreaOtherText.required = serviceAreaOtherCb.checked;
+            }
+            
+            checkAllMandatoryFields(); 
+        }
+        
+        // --- Reset Form ---
+        if (resetFormBtn) {
+            resetFormBtn.addEventListener('click', function() {
+                if (confirm('Tem a certeza que quer repor o formulário? Todo o progresso não guardado será perdido.')) {
+                    mainForm.reset();
+                    localStorage.removeItem(localStorageKey);
+                    document.querySelectorAll('input[type="date"].custom-date-input').forEach(dIn => {
+                        dIn.setAttribute('data-has-explicit-value', 'false'); 
+                        dIn.value = ''; 
+                         if(dIn.id === 'planned_service_date' && ticketRefInput) {
+                            ticketRefInput.value = initialTicketRefValue;
+                        }
+                    });
+                    const saOtherTxt = document.getElementById('service_area_other_text');
+                    if(saOtherTxt) { saOtherTxt.value = ''; saOtherTxt.disabled = true; saOtherTxt.required = false; }
+                    
+                    const fnDisp = document.getElementById('file_attachment_name');
+                    if(fnDisp) fnDisp.textContent = 'Nenhum ficheiro selecionado';
+
+                    showFeedback('Formulário reposto.', 'info');
+                    setActiveTab('clientInfo', true); 
+                    checkAllMandatoryFields(); 
+                }
+            });
+        }
+
+        // --- Form Submission ---
+        if (mainForm) {
+            mainForm.addEventListener('submit', function(event) {
+                event.preventDefault();
+                if (checkAllMandatoryFields()) {
+                    const formData = new FormData(mainForm);
+                    console.log("Dados do Formulário para Submissão (Simulado):");
+                    for (let [key, value] of formData.entries()) { 
+                        if (formData.get(key) instanceof File) {
+                             console.log(`${key}: ${value.name} (type: ${value.type}, size: ${value.size} bytes)`);
+                        } else {
+                            console.log(`${key}: ${value}`);
+                        }
+                    }
+                    showFeedback('Formulário submetido com sucesso!', 'success');
+                    setTimeout(() => {
+                        localStorage.removeItem(localStorageKey); 
+                        mainForm.reset();
+                        document.querySelectorAll('input[type="date"].custom-date-input').forEach(dIn => {
+                            dIn.setAttribute('data-has-explicit-value', 'false'); 
+                            dIn.value = '';
+                            if(dIn.id === 'planned_service_date' && ticketRefInput) {
+                                ticketRefInput.value = initialTicketRefValue;
+                            }
+                        });
+                        const saOtherTxt = document.getElementById('service_area_other_text');
+                        if(saOtherTxt) { saOtherTxt.value = ''; saOtherTxt.disabled = true; saOtherTxt.required = false;}
+                        const fnDisp = document.getElementById('file_attachment_name');
+                        if(fnDisp) fnDisp.textContent = 'Nenhum ficheiro selecionado';
+                        
+                        setActiveTab('clientInfo', true); 
+                        checkAllMandatoryFields(); 
+                    }, 2000);
+                } else {
+                    showFeedback('Por favor, preencha todos os campos obrigatórios antes de submeter.', 'error');
+                    for (const pane of tabPanes) {
+                        if (!validateCurrentTabFields(pane)) { 
+                            setActiveTab(pane.id); 
+                            const firstInvalidField = pane.querySelector('[required]:not(:disabled):invalid, [required]:not(:disabled).error-field'); 
+                            if (firstInvalidField && typeof firstInvalidField.focus === 'function') {
+                                firstInvalidField.focus();
+                            }
+                            break; 
+                        }
+                    }
+                }
+            });
+        }
+
+        // --- File Input Display ---
+        const fileInputActual = document.getElementById('file_attachment_input_actual');
+        const fileNameDisplay = document.getElementById('file_attachment_name');
+        if (fileInputActual && fileNameDisplay) {
+            fileInputActual.addEventListener('change', function() {
+                fileNameDisplay.textContent = (this.files && this.files.length > 0) ? 
+                    this.files[0].name : 'Nenhum ficheiro selecionado';
+            });
+        }
+
+        // --- "Other" Checkbox Dependent Field Logic ---
+        const serviceAreaOtherCb = document.getElementById('service_area_other_cb');
+        const serviceAreaOtherText = document.getElementById('service_area_other_text');
+        if (serviceAreaOtherCb && serviceAreaOtherText) {
+            serviceAreaOtherCb.addEventListener('change', function() {
+                serviceAreaOtherText.disabled = !this.checked;
+                serviceAreaOtherText.required = this.checked;
+                if (this.checked) {
+                    serviceAreaOtherText.focus();
+                } else {
+                     serviceAreaOtherText.value = ''; 
+                }
+                checkAllMandatoryFields(); 
+            });
+            serviceAreaOtherText.disabled = !serviceAreaOtherCb.checked;
+            serviceAreaOtherText.required = serviceAreaOtherCb.checked;
+        }
+        
+        // --- Initial Setup ---
+        // If you add Flatpickr, its initialization should ideally go here or be wrapped
+        // in a function called here, after other DOM elements are set up.
+        loadProgress(); 
+        setActiveTab('clientInfo', true);
+
+    });
+    </script>
+</body>
+</html>
