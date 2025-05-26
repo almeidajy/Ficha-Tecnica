@@ -848,7 +848,7 @@
                         </div>
                     </div>
 
-                     <div id="equipment" class="tab-pane hidden">
+                    <div id="equipment" class="tab-pane hidden">
                         <h2 class="section-title mb-8">Detalhes do Equipamento</h2>
                         <div class="space-y-8">
                             <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
@@ -1015,8 +1015,10 @@
                             </div>
                         </div>
                     </div>
-                </div> </form>
-        </div> </main>
+                </div> 
+            </form>
+        </div> 
+    </main>
 
     <footer class="footer-bg mt-16">
         <div class="container mx-auto px-4 sm:px-6 flex flex-col md:flex-row justify-between items-center max-w-5xl relative z-10">
@@ -1092,17 +1094,17 @@
 
 
         // --- Show Feedback Message ---
-        function showFeedback(message, type = 'info') {
+        function showFeedback(message, type = 'info') { // Added 'info' as a possible type
             if (!feedbackMessageEl) return;
             feedbackMessageEl.textContent = message;
             feedbackMessageEl.className = 'show'; 
             feedbackMessageEl.style.background = ''; 
 
             if (type === 'error') {
-                feedbackMessageEl.style.background = 'linear-gradient(135deg, #E53E3E, #C53030)';
+                feedbackMessageEl.style.background = 'linear-gradient(135deg, #E53E3E, #C53030)'; // Red for error
             } else if (type === 'success') {
-                feedbackMessageEl.style.background = 'linear-gradient(135deg, #48BB78, #38A169)';
-            } else { // Default to brand gradient for info
+                feedbackMessageEl.style.background = 'linear-gradient(135deg, #48BB78, #38A169)'; // Green for success
+            } else { // Default to brand gradient for info or other types
                 feedbackMessageEl.style.background = 'var(--brand-gradient)';
             }
             setTimeout(() => {
@@ -1416,21 +1418,39 @@
         }
 
         // --- Form Submission ---
-        if (mainForm) {
-            mainForm.addEventListener('submit', function(event) {
-                event.preventDefault();
-                if (checkAllMandatoryFields()) {
-                    const formData = new FormData(mainForm);
-                    console.log("Dados do Formulário para Submissão (Simulado):");
-                    for (let [key, value] of formData.entries()) { 
-                        if (formData.get(key) instanceof File) {
-                             console.log(`${key}: ${value.name} (type: ${value.type}, size: ${value.size} bytes)`);
-                        } else {
-                            console.log(`${key}: ${value}`);
-                        }
+        // This is the section that has been updated
+        mainForm.addEventListener('submit', function(event) {
+            if (checkAllMandatoryFields()) {
+                event.preventDefault(); // Prevent default browser submission
+                const formData = new FormData(mainForm);
+                // !!! IMPORTANT: PASTE YOUR WEB APP URL HERE !!!
+                const googleWebAppURL = 'https://script.google.com/macros/s/AKfycbyzeeaU9U-VPBSfuyD4EpmC4X8kmKzWjLl67oGUsooulJGwja6TIGPxoSt00fC6zmerN/exec'; 
+
+                // Disable submit buttons to prevent multiple clicks while sending
+                if(submitFormBtn) submitFormBtn.disabled = true;
+                if (submitFinalBtn) submitFinalBtn.disabled = true;
+                showFeedback('A enviar dados...', 'info'); // Using your existing feedback function
+
+                fetch(googleWebAppURL, {
+                    method: 'POST',
+                    body: formData,
+                    // No 'mode: no-cors' needed here as your Apps Script returns JSON with the correct MimeType
+                })
+                .then(response => {
+                    if (!response.ok) {
+                        // If the server response is not ok (e.g. 404, 500 error)
+                        return response.text().then(text => { 
+                            throw new Error('Falha na rede ou erro do servidor: ' + response.status + " " + text); 
+                        });
                     }
-                    showFeedback('Formulário submetido com sucesso!', 'success');
-                    setTimeout(() => {
+                    return response.json(); // Process the JSON response from Apps Script
+                })
+                .then(data => {
+                    if (data.result === 'success') {
+                        console.log('Sucesso (Google Sheets):', data.dataReceived); // Logs the data that was sent
+                        showFeedback('Formulário submetido com sucesso!', 'success');
+
+                        // Your existing success and form reset logic:
                         localStorage.removeItem(localStorageKey); 
                         mainForm.reset();
                         document.querySelectorAll('input[type="date"].custom-date-input').forEach(dIn => {
@@ -1446,23 +1466,40 @@
                         if(fnDisp) fnDisp.textContent = 'Nenhum ficheiro selecionado';
                         
                         setActiveTab('clientInfo', true); 
+                        checkAllMandatoryFields(); // This will re-enable submit buttons if form is valid (or keep them disabled if not)
+
+                    } else {
+                        // Error reported by the Apps Script (e.g., script error)
+                        console.error('Erro do Google Apps Script:', data.error);
+                        console.error('Detalhes do erro do script:', data.details);
+                        showFeedback('Erro ao guardar os dados: ' + data.error, 'error');
+                        // Re-enable submit buttons based on form validity
                         checkAllMandatoryFields(); 
-                    }, 2000);
-                } else {
-                    showFeedback('Por favor, preencha todos os campos obrigatórios antes de submeter.', 'error');
-                    for (const pane of tabPanes) {
-                        if (!validateCurrentTabFields(pane)) { 
-                            setActiveTab(pane.id); 
-                            const firstInvalidField = pane.querySelector('[required]:not(:disabled):invalid, [required]:not(:disabled).error-field'); 
-                            if (firstInvalidField && typeof firstInvalidField.focus === 'function') {
-                                firstInvalidField.focus();
-                            }
-                            break; 
+                    }
+                })
+                .catch(error => {
+                    // Network errors or other issues with the fetch itself
+                    console.error('Erro no Fetch:', error);
+                    showFeedback('Erro de comunicação ao submeter. Tente novamente. (' + error.message + ')', 'error');
+                    // Re-enable submit buttons based on form validity
+                    checkAllMandatoryFields();
+                });
+            } else {
+                // This else corresponds to "if (checkAllMandatoryFields())"
+                // Logic for when not all mandatory fields are filled
+                showFeedback('Por favor, preencha todos os campos obrigatórios antes de submeter.', 'error');
+                for (const pane of tabPanes) {
+                    if (!validateCurrentTabFields(pane)) { 
+                        setActiveTab(pane.id); 
+                        const firstInvalidField = pane.querySelector('[required]:not(:disabled):invalid, [required]:not(:disabled).error-field'); 
+                        if (firstInvalidField && typeof firstInvalidField.focus === 'function') {
+                            firstInvalidField.focus();
                         }
+                        break; 
                     }
                 }
-            });
-        }
+            }
+        });
 
         // --- File Input Display ---
         const fileInputActual = document.getElementById('file_attachment_input_actual');
@@ -1493,8 +1530,6 @@
         }
         
         // --- Initial Setup ---
-        // If you add Flatpickr, its initialization should ideally go here or be wrapped
-        // in a function called here, after other DOM elements are set up.
         loadProgress(); 
         setActiveTab('clientInfo', true);
 
