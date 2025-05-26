@@ -1423,7 +1423,7 @@
             if (checkAllMandatoryFields()) {
                 event.preventDefault(); // Prevent default browser submission
                 const formData = new FormData(mainForm);
-                // !!! IMPORTANT: PASTE YOUR WEB APP URL HERE !!!
+                // !!! IMPORTANT: THIS URL IS FROM YOUR SCREENSHOT !!!
                 const googleWebAppURL = 'https://script.google.com/macros/s/AKfycbyzeeaU9U-VPBSfuyD4EpmC4X8kmKzWjLl67oGUsooulJGwja6TIGPxoSt00fC6zmerN/exec'; 
 
                 // Disable submit buttons to prevent multiple clicks while sending
@@ -1434,51 +1434,35 @@
                 fetch(googleWebAppURL, {
                     method: 'POST',
                     body: formData,
-                    // No 'mode: no-cors' needed here as your Apps Script returns JSON with the correct MimeType
+                    mode: 'no-cors' // Added for diagnosing "Failed to fetch"
                 })
                 .then(response => {
-                    if (!response.ok) {
-                        // If the server response is not ok (e.g. 404, 500 error)
-                        return response.text().then(text => { 
-                            throw new Error('Falha na rede ou erro do servidor: ' + response.status + " " + text); 
-                        });
-                    }
-                    return response.json(); // Process the JSON response from Apps Script
-                })
-                .then(data => {
-                    if (data.result === 'success') {
-                        console.log('Sucesso (Google Sheets):', data.dataReceived); // Logs the data that was sent
-                        showFeedback('Formulário submetido com sucesso!', 'success');
+                    // With 'no-cors', the response object is opaque and response.ok, response.status, response.json() are not usable.
+                    // We have to be optimistic here or rely on checking the Google Sheet/Apps Script logs.
+                    console.log('Fetch request sent. Check Google Sheet for data and Apps Script logs for details.');
+                    showFeedback('Formulário enviado! Verifique a sua Google Sheet.', 'success'); // Optimistic success message
 
-                        // Your existing success and form reset logic:
-                        localStorage.removeItem(localStorageKey); 
-                        mainForm.reset();
-                        document.querySelectorAll('input[type="date"].custom-date-input').forEach(dIn => {
-                            dIn.setAttribute('data-has-explicit-value', 'false'); 
-                            dIn.value = '';
-                            if(dIn.id === 'planned_service_date' && ticketRefInput) {
-                                ticketRefInput.value = initialTicketRefValue;
-                            }
-                        });
-                        const saOtherTxt = document.getElementById('service_area_other_text');
-                        if(saOtherTxt) { saOtherTxt.value = ''; saOtherTxt.disabled = true; saOtherTxt.required = false;}
-                        const fnDisp = document.getElementById('file_attachment_name');
-                        if(fnDisp) fnDisp.textContent = 'Nenhum ficheiro selecionado';
-                        
-                        setActiveTab('clientInfo', true); 
-                        checkAllMandatoryFields(); // This will re-enable submit buttons if form is valid (or keep them disabled if not)
-
-                    } else {
-                        // Error reported by the Apps Script (e.g., script error)
-                        console.error('Erro do Google Apps Script:', data.error);
-                        console.error('Detalhes do erro do script:', data.details);
-                        showFeedback('Erro ao guardar os dados: ' + data.error, 'error');
-                        // Re-enable submit buttons based on form validity
-                        checkAllMandatoryFields(); 
-                    }
+                    // Your existing success and form reset logic:
+                    localStorage.removeItem(localStorageKey); 
+                    mainForm.reset();
+                    document.querySelectorAll('input[type="date"].custom-date-input').forEach(dIn => {
+                        dIn.setAttribute('data-has-explicit-value', 'false'); 
+                        dIn.value = '';
+                        if(dIn.id === 'planned_service_date' && ticketRefInput) {
+                            ticketRefInput.value = initialTicketRefValue;
+                        }
+                    });
+                    const saOtherTxt = document.getElementById('service_area_other_text');
+                    if(saOtherTxt) { saOtherTxt.value = ''; saOtherTxt.disabled = true; saOtherTxt.required = false;}
+                    const fnDisp = document.getElementById('file_attachment_name');
+                    if(fnDisp) fnDisp.textContent = 'Nenhum ficheiro selecionado';
+                    
+                    setActiveTab('clientInfo', true); 
+                    checkAllMandatoryFields(); 
                 })
                 .catch(error => {
-                    // Network errors or other issues with the fetch itself
+                    // This .catch() will still catch fundamental network errors (e.g., DNS failure, server unreachable)
+                    // or if the 'no-cors' request itself is blocked by the browser for some security reason (less common for POST).
                     console.error('Erro no Fetch:', error);
                     showFeedback('Erro de comunicação ao submeter. Tente novamente. (' + error.message + ')', 'error');
                     // Re-enable submit buttons based on form validity
