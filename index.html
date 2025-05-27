@@ -1423,8 +1423,8 @@
             if (checkAllMandatoryFields()) {
                 event.preventDefault(); // Prevent default browser submission
                 const formData = new FormData(mainForm);
-                // !!! IMPORTANT: THIS URL IS FROM YOUR SCREENSHOT !!!
-                const googleWebAppURL = 'https://script.google.com/macros/s/AKfycbyzeeaU9U-VPBSfuyD4EpmC4X8kmKzWjLl67oGUsooulJGwja6TIGPxoSt00fC6zmerN/exec'; 
+                // !!! IMPORTANT: THIS URL IS FROM YOUR LATEST SCREENSHOT !!!
+                const googleWebAppURL = 'https://script.google.com/macros/s/AKfycbxsbYzeaU9U-VPBSfuyD4EpmC4X8kmKzWjLl67oGUsooulJGwja6TIGPxoSt00fC6zmerN/exec'; 
 
                 // Disable submit buttons to prevent multiple clicks while sending
                 if(submitFormBtn) submitFormBtn.disabled = true;
@@ -1440,25 +1440,27 @@
                     // With 'no-cors', the response object is opaque and response.ok, response.status, response.json() are not usable.
                     // We have to be optimistic here or rely on checking the Google Sheet/Apps Script logs.
                     console.log('Fetch request sent. Check Google Sheet for data and Apps Script logs for details.');
-                    showFeedback('Formulário enviado! Verifique a sua Google Sheet.', 'success'); // Optimistic success message
+                    showFeedback('Formulário enviado! Verifique a sua Google Sheet.', 'success'); 
 
-                    // Your existing success and form reset logic:
-                    localStorage.removeItem(localStorageKey); 
-                    mainForm.reset();
-                    document.querySelectorAll('input[type="date"].custom-date-input').forEach(dIn => {
-                        dIn.setAttribute('data-has-explicit-value', 'false'); 
-                        dIn.value = '';
-                        if(dIn.id === 'planned_service_date' && ticketRefInput) {
-                            ticketRefInput.value = initialTicketRefValue;
-                        }
-                    });
-                    const saOtherTxt = document.getElementById('service_area_other_text');
-                    if(saOtherTxt) { saOtherTxt.value = ''; saOtherTxt.disabled = true; saOtherTxt.required = false;}
-                    const fnDisp = document.getElementById('file_attachment_name');
-                    if(fnDisp) fnDisp.textContent = 'Nenhum ficheiro selecionado';
-                    
-                    setActiveTab('clientInfo', true); 
-                    checkAllMandatoryFields(); 
+                    // Delay the form reset and tab switch slightly to ensure feedback is visible
+                    setTimeout(() => {
+                        localStorage.removeItem(localStorageKey); 
+                        mainForm.reset();
+                        document.querySelectorAll('input[type="date"].custom-date-input').forEach(dIn => {
+                            dIn.setAttribute('data-has-explicit-value', 'false'); 
+                            dIn.value = '';
+                            if(dIn.id === 'planned_service_date' && ticketRefInput) {
+                                ticketRefInput.value = initialTicketRefValue;
+                            }
+                        });
+                        const saOtherTxt = document.getElementById('service_area_other_text');
+                        if(saOtherTxt) { saOtherTxt.value = ''; saOtherTxt.disabled = true; saOtherTxt.required = false;}
+                        const fnDisp = document.getElementById('file_attachment_name');
+                        if(fnDisp) fnDisp.textContent = 'Nenhum ficheiro selecionado';
+                        
+                        setActiveTab('clientInfo', true); 
+                        checkAllMandatoryFields(); 
+                    }, 500); // Delay of 0.5 seconds
                 })
                 .catch(error => {
                     // This .catch() will still catch fundamental network errors (e.g., DNS failure, server unreachable)
