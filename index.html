@@ -725,6 +725,7 @@
 
         <div class="form-container">
             <form id="main-technical-form" name="ficha-tecnica-netlify" data-netlify="true">
+                <input type="hidden" name="form-name" value="ficha-tecnica-netlify" />
                 <div class="flex flex-col sm:flex-row justify-between items-center mb-8 space-y-5 sm:space-y-0">
                     <div class="w-full sm:w-2/5">
                         <label for="form-completion" class="form-label">Progresso</label>
@@ -1417,39 +1418,56 @@
             });
         }
 
-        // --- Form Submission ---
-        // This is the section that has been updated FOR NETLIFY
+        // --- Form Submission for Netlify AJAX ---
         mainForm.addEventListener('submit', function(event) {
+            event.preventDefault(); // Prevent default browser submission
+
             if (checkAllMandatoryFields()) {
-                event.preventDefault(); // Keep this for your client-side logic
+                const formData = new FormData(mainForm);
+                
+                // Disable submit buttons to prevent multiple clicks while sending
+                if(submitFormBtn) submitFormBtn.disabled = true;
+                if (submitFinalBtn) submitFinalBtn.disabled = true;
+                showFeedback('A enviar dados...', 'info');
 
-                // The actual data submission will be handled by Netlify because of:
-                // <form data-netlify="true" ... > in your HTML.
-                // We no longer need a fetch() call here to Google Apps Script.
+                // Netlify AJAX submission
+                // We POST to the current page path. Netlify handles it because of data-netlify="true"
+                // and the hidden "form-name" input.
+                fetch(location.pathname, { // Using location.pathname for Netlify AJAX
+                    method: 'POST',
+                    headers: { "Content-Type": "application/x-www-form-urlencoded" },
+                    body: new URLSearchParams(formData).toString() // Encode FormData for Netlify
+                })
+                .then(() => {
+                    console.log('Submissão enviada para Netlify com sucesso (aparente).');
+                    showFeedback('Formulário submetido com sucesso!', 'success');
 
-                console.log('Form is valid. Netlify should handle the submission.');
-                showFeedback('Formulário submetido com sucesso!', 'success'); // Your existing client-side success message
-
-                // Your existing success and form reset logic:
-                // Adding a small delay so the user can see the feedback before reset
-                setTimeout(() => {
-                    localStorage.removeItem(localStorageKey); 
-                    mainForm.reset();
-                    document.querySelectorAll('input[type="date"].custom-date-input').forEach(dIn => {
-                        dIn.setAttribute('data-has-explicit-value', 'false'); 
-                        dIn.value = '';
-                        if(dIn.id === 'planned_service_date' && ticketRefInput) {
-                            ticketRefInput.value = initialTicketRefValue;
-                        }
-                    });
-                    const saOtherTxt = document.getElementById('service_area_other_text');
-                    if(saOtherTxt) { saOtherTxt.value = ''; saOtherTxt.disabled = true; saOtherTxt.required = false;}
-                    const fnDisp = document.getElementById('file_attachment_name');
-                    if(fnDisp) fnDisp.textContent = 'Nenhum ficheiro selecionado';
-                    
-                    setActiveTab('clientInfo', true); 
-                    checkAllMandatoryFields(); 
-                }, 500); // 0.5 second delay before reset
+                    // Your existing success and form reset logic:
+                    setTimeout(() => {
+                        localStorage.removeItem(localStorageKey); 
+                        mainForm.reset();
+                        document.querySelectorAll('input[type="date"].custom-date-input').forEach(dIn => {
+                            dIn.setAttribute('data-has-explicit-value', 'false'); 
+                            dIn.value = '';
+                            if(dIn.id === 'planned_service_date' && ticketRefInput) {
+                                ticketRefInput.value = initialTicketRefValue;
+                            }
+                        });
+                        const saOtherTxt = document.getElementById('service_area_other_text');
+                        if(saOtherTxt) { saOtherTxt.value = ''; saOtherTxt.disabled = true; saOtherTxt.required = false;}
+                        const fnDisp = document.getElementById('file_attachment_name');
+                        if(fnDisp) fnDisp.textContent = 'Nenhum ficheiro selecionado';
+                        
+                        setActiveTab('clientInfo', true); 
+                        checkAllMandatoryFields(); 
+                    }, 500); // Delay before reset
+                })
+                .catch(error => {
+                    console.error('Erro ao submeter para Netlify:', error);
+                    showFeedback('Erro ao submeter o formulário para Netlify. (' + error.message + ')', 'error');
+                    // Re-enable submit buttons based on form validity
+                    checkAllMandatoryFields();
+                });
             } else {
                 // Logic for when not all mandatory fields are filled
                 showFeedback('Por favor, preencha todos os campos obrigatórios antes de submeter.', 'error');
@@ -1465,6 +1483,7 @@
                 }
             }
         });
+
 
         // --- File Input Display ---
         const fileInputActual = document.getElementById('file_attachment_input_actual');
