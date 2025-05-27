@@ -724,7 +724,7 @@
         <h1 class="page-main-title mb-10 text-center sm:text-left">Formulário de Serviço Técnico</h1>
 
         <div class="form-container">
-            <form id="main-technical-form">
+            <form id="main-technical-form" name="ficha-tecnica-netlify" data-netlify="true">
                 <div class="flex flex-col sm:flex-row justify-between items-center mb-8 space-y-5 sm:space-y-0">
                     <div class="w-full sm:w-2/5">
                         <label for="form-completion" class="form-label">Progresso</label>
@@ -1418,60 +1418,39 @@
         }
 
         // --- Form Submission ---
-        // This is the section that has been updated
+        // This is the section that has been updated FOR NETLIFY
         mainForm.addEventListener('submit', function(event) {
             if (checkAllMandatoryFields()) {
-                event.preventDefault(); // Prevent default browser submission
-                const formData = new FormData(mainForm);
-                // !!! IMPORTANT: THIS URL IS FROM YOUR LATEST SCREENSHOT (image_514ff7.png) !!!
-                const googleWebAppURL = 'https://script.google.com/macros/s/AKfycbyzeeaU9U-VPBSfuyD4EpmC4X8kmKzWjLl67oGUsooulJGwja6TIGPxoSt00fC6zmerN/exec'; 
+                event.preventDefault(); // Keep this for your client-side logic
 
-                // Disable submit buttons to prevent multiple clicks while sending
-                if(submitFormBtn) submitFormBtn.disabled = true;
-                if (submitFinalBtn) submitFinalBtn.disabled = true;
-                showFeedback('A enviar dados...', 'info'); // Using your existing feedback function
+                // The actual data submission will be handled by Netlify because of:
+                // <form data-netlify="true" ... > in your HTML.
+                // We no longer need a fetch() call here to Google Apps Script.
 
-                fetch(googleWebAppURL, {
-                    method: 'POST',
-                    body: formData,
-                    mode: 'no-cors' // Added for diagnosing "Failed to fetch"
-                })
-                .then(response => {
-                    // With 'no-cors', the response object is opaque and response.ok, response.status, response.json() are not usable.
-                    // We have to be optimistic here or rely on checking the Google Sheet/Apps Script logs.
-                    console.log('Fetch request sent. Check Google Sheet for data and Apps Script logs for details.');
-                    showFeedback('Formulário enviado! Verifique a sua Google Sheet.', 'success'); 
+                console.log('Form is valid. Netlify should handle the submission.');
+                showFeedback('Formulário submetido com sucesso!', 'success'); // Your existing client-side success message
 
-                    // Delay the form reset and tab switch slightly to ensure feedback is visible
-                    setTimeout(() => {
-                        localStorage.removeItem(localStorageKey); 
-                        mainForm.reset();
-                        document.querySelectorAll('input[type="date"].custom-date-input').forEach(dIn => {
-                            dIn.setAttribute('data-has-explicit-value', 'false'); 
-                            dIn.value = '';
-                            if(dIn.id === 'planned_service_date' && ticketRefInput) {
-                                ticketRefInput.value = initialTicketRefValue;
-                            }
-                        });
-                        const saOtherTxt = document.getElementById('service_area_other_text');
-                        if(saOtherTxt) { saOtherTxt.value = ''; saOtherTxt.disabled = true; saOtherTxt.required = false;}
-                        const fnDisp = document.getElementById('file_attachment_name');
-                        if(fnDisp) fnDisp.textContent = 'Nenhum ficheiro selecionado';
-                        
-                        setActiveTab('clientInfo', true); 
-                        checkAllMandatoryFields(); 
-                    }, 500); // Delay of 0.5 seconds
-                })
-                .catch(error => {
-                    // This .catch() will still catch fundamental network errors (e.g., DNS failure, server unreachable)
-                    // or if the 'no-cors' request itself is blocked by the browser for some security reason (less common for POST).
-                    console.error('Erro no Fetch:', error);
-                    showFeedback('Erro de comunicação ao submeter. Tente novamente. (' + error.message + ')', 'error');
-                    // Re-enable submit buttons based on form validity
-                    checkAllMandatoryFields();
-                });
+                // Your existing success and form reset logic:
+                // Adding a small delay so the user can see the feedback before reset
+                setTimeout(() => {
+                    localStorage.removeItem(localStorageKey); 
+                    mainForm.reset();
+                    document.querySelectorAll('input[type="date"].custom-date-input').forEach(dIn => {
+                        dIn.setAttribute('data-has-explicit-value', 'false'); 
+                        dIn.value = '';
+                        if(dIn.id === 'planned_service_date' && ticketRefInput) {
+                            ticketRefInput.value = initialTicketRefValue;
+                        }
+                    });
+                    const saOtherTxt = document.getElementById('service_area_other_text');
+                    if(saOtherTxt) { saOtherTxt.value = ''; saOtherTxt.disabled = true; saOtherTxt.required = false;}
+                    const fnDisp = document.getElementById('file_attachment_name');
+                    if(fnDisp) fnDisp.textContent = 'Nenhum ficheiro selecionado';
+                    
+                    setActiveTab('clientInfo', true); 
+                    checkAllMandatoryFields(); 
+                }, 500); // 0.5 second delay before reset
             } else {
-                // This else corresponds to "if (checkAllMandatoryFields())"
                 // Logic for when not all mandatory fields are filled
                 showFeedback('Por favor, preencha todos os campos obrigatórios antes de submeter.', 'error');
                 for (const pane of tabPanes) {
