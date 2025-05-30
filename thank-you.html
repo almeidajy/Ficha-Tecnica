@@ -5,50 +5,40 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta name="description" content="Página de confirmação de submissão de formulário com sucesso">
     <meta name="theme-color" content="#FF7A00">
-    <meta name="author" content="Your Company Name">
+    <meta name="author" content="Grupo Angbu">
     <meta name="robots" content="noindex, nofollow">
     
     <title>Submissão Concluída com Sucesso | Obrigado</title>
     
-    <!-- Preconnect to external domains for better performance -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link rel="preconnect" href="https://cdn.jsdelivr.net">
     
-    <!-- CSS Resources -->
-    <script src="https://cdn.tailwindcss.com"></script>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
-    <link href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@6.4.0/css/all.min.css" rel="stylesheet">
-
-    <style>
+    <script src="https://cdn.tailwindcss.com"></script> <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;800&display=swap" rel="stylesheet"> <link href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@5.15.4/css/all.min.css" rel="stylesheet"> <style>
         :root {
-            /* Brand Colors */
+            /* Brand Colors from Main Form */
             --brand-primary-accent: #FF7A00;
             --brand-secondary-accent: #FF4D00;
-            --brand-tertiary: #FFB366;
-            --brand-light: #FFE5CC;
             --shadow-color-accent-rgb: 255, 122, 0;
             
-            /* Gradients */
+            /* Gradients from Main Form */
             --brand-gradient: linear-gradient(135deg, var(--brand-primary-accent), var(--brand-secondary-accent));
-            --brand-gradient-soft: linear-gradient(135deg, rgba(255, 122, 0, 0.1), rgba(255, 77, 0, 0.1));
-            --brand-gradient-radial: radial-gradient(circle, var(--brand-primary-accent), var(--brand-secondary-accent));
             
-            /* Dark Theme Colors */
+            /* Dark Theme Colors from Main Form */
             --bg-page: #0A0C1F;
-            --bg-card-thankyou: #101330;
-            --bg-card-hover: #141640;
+            --bg-card-thankyou: #101330; /* Can be same as --bg-card from main form */
             --text-light: #F0F4FF;
             --text-medium: #A0A8C0;
-            --text-dark: #6B7394;
+            --text-dark-label: #A0A8C0; /* For less prominent labels like "Referência da Submissão:" */
             
             /* UI Elements */
             --success-color: var(--brand-primary-accent);
             --animation-duration: 0.5s;
             --animation-timing: cubic-bezier(0.4, 0, 0.2, 1);
-            --border-form-element: #2A2D50;
-            --bg-form-element: #1A1D3E;
-            
+            --border-form-element: #2A2D50; /* For consistency if needed on card borders */
+            --bg-form-element: #1A1D3E; /* For exit button background */
+
+
             /* Spacing */
             --spacing-xs: 0.5rem;
             --spacing-sm: 1rem;
@@ -57,7 +47,6 @@
             --spacing-xl: 3rem;
         }
 
-        /* Improved base styles */
         * {
             box-sizing: border-box;
             margin: 0;
@@ -71,14 +60,13 @@
         }
         
         body {
-            font-family: 'Inter', system-ui, -apple-system, BlinkMacSystemFont, sans-serif;
+            font-family: 'Poppins', sans-serif; /* Matched to main form */
             background-color: var(--bg-page);
-            color: var(--text-light);
+            color: var(--text-light); /* Default text color */
             line-height: 1.6;
             overflow-x: hidden;
         }
 
-        /* Improved page background with multiple layers */
         .page-background {
             position: relative;
             overflow: hidden;
@@ -89,143 +77,53 @@
             padding: var(--spacing-md);
         }
 
-        .page-background::before {
-            content: '';
-            position: absolute;
-            top: 0;
-            left: 0;
-            right: 0;
-            bottom: 0;
-            background-image: 
-                radial-gradient(circle at 20% 50%, rgba(255, 122, 0, 0.15) 0%, transparent 40%),
-                radial-gradient(circle at 80% 50%, rgba(255, 77, 0, 0.15) 0%, transparent 40%),
-                radial-gradient(circle at 50% 100%, rgba(255, 122, 0, 0.08) 0%, transparent 50%),
-                radial-gradient(ellipse at top, rgba(255, 122, 0, 0.03) 0%, transparent 70%);
-            pointer-events: none;
-            z-index: 0;
-            animation: backgroundPulse 10s ease-in-out infinite;
-        }
-
-        @keyframes backgroundPulse {
-            0%, 100% { opacity: 1; }
-            50% { opacity: 0.7; }
-        }
-        
-        /* Enhanced particle system */
+        /* Particle Background (consistent with main form) */
         .particle-background {
             position: fixed;
             top: 0;
             left: 0;
             width: 100%;
             height: 100%;
-            z-index: 0;
+            z-index: 0; /* Behind card */
             overflow: hidden;
             pointer-events: none;
         }
 
         .particle {
             position: absolute;
-            background: var(--brand-gradient-radial);
+            background-color: var(--brand-primary-accent); /* Using brand color */
             border-radius: 50%;
             opacity: 0;
-            filter: blur(0.5px);
-            animation: float 20s infinite ease-in-out;
-            box-shadow: 0 0 10px rgba(255, 122, 0, 0.3);
+            animation: floatParticles 20s infinite ease-in-out;
         }
-
-        .particle:nth-child(even) {
-            animation-duration: 25s;
-            animation-delay: 2s;
-        }
-
-        .particle:nth-child(3n) {
-            animation-duration: 30s;
-            animation-delay: 4s;
-        }
-
-        @keyframes float {
-            0%, 100% { 
-                transform: translateY(100vh) translateX(0) scale(0) rotate(0deg);
-                opacity: 0;
-            }
-            10% {
-                opacity: 0.6;
-            }
-            50% { 
-                transform: translateY(-100vh) translateX(30px) scale(1) rotate(180deg);
-                opacity: 0.3;
-            }
-            90% {
-                opacity: 0.6;
-            }
+        @keyframes floatParticles { /* Renamed to avoid conflict if main form CSS is somehow loaded */
+            0%, 100% { transform: translateY(0) translateX(0) scale(1); opacity: 0.2; }
+            25% { transform: translateY(-20px) translateX(15px) scale(1.1); opacity: 0.4; }
+            50% { transform: translateY(10px) translateX(-10px) scale(0.9); opacity: 0.3; }
+            75% { transform: translateY(-15px) translateX(20px) scale(1.05); opacity: 0.35; }
         }
         
-        /* Enhanced success card with glassmorphism */
         .success-card {
-            animation: slideUp var(--animation-duration) var(--animation-timing), 
-                      fadeIn var(--animation-duration) var(--animation-timing);
-            backdrop-filter: blur(20px) saturate(180%);
-            -webkit-backdrop-filter: blur(20px) saturate(180%);
-            background: linear-gradient(135deg, 
-                rgba(16, 19, 48, 0.95), 
-                rgba(16, 19, 48, 0.85));
-            border: 1px solid rgba(255, 122, 0, 0.2);
-            box-shadow: 
-                0 20px 40px rgba(0, 0, 0, 0.4),
-                0 0 80px rgba(255, 122, 0, 0.1),
-                inset 0 0 30px rgba(255, 122, 0, 0.05);
+            animation: slideUp var(--animation-duration) var(--animation-timing), fadeIn var(--animation-duration) var(--animation-timing);
+            backdrop-filter: blur(10px) saturate(150%);
+            -webkit-backdrop-filter: blur(10px) saturate(150%);
+            background: linear-gradient(145deg, rgba(26, 29, 62, 0.9), rgba(10, 12, 31, 0.95)); /* Darker, more themed */
+            border: 1px solid rgba(var(--shadow-color-accent-rgb), 0.2);
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.4), 0 0 30px rgba(var(--shadow-color-accent-rgb), 0.1) inset;
             position: relative;
             overflow: hidden;
             transition: all 0.3s var(--animation-timing);
+            z-index: 10; /* Above particle backgrounds */
         }
 
         .success-card:hover {
-            transform: translateY(-5px);
-            box-shadow: 
-                0 25px 50px rgba(0, 0, 0, 0.5),
-                0 0 100px rgba(255, 122, 0, 0.15),
-                inset 0 0 40px rgba(255, 122, 0, 0.08);
-        }
-
-        /* Animated gradient border */
-        .success-card::before {
-            content: '';
-            position: absolute;
-            top: -2px;
-            left: -2px;
-            right: -2px;
-            bottom: -2px;
-            background: linear-gradient(45deg, 
-                var(--brand-primary-accent), 
-                var(--brand-secondary-accent), 
-                var(--brand-primary-accent));
-            background-size: 300% 300%;
-            border-radius: inherit;
-            opacity: 0;
-            z-index: -1;
-            transition: opacity 0.3s ease;
-            animation: gradientShift 3s ease infinite;
-        }
-
-        @keyframes gradientShift {
-            0% { background-position: 0% 50%; }
-            50% { background-position: 100% 50%; }
-            100% { background-position: 0% 50%; }
-        }
-
-        .success-card:hover::before {
-            opacity: 0.7;
+            transform: translateY(-3px);
+            box-shadow: 0 25px 50px rgba(0, 0, 0, 0.5), 0 0 40px rgba(var(--shadow-color-accent-rgb), 0.15) inset;
         }
         
         @keyframes slideUp {
-            from { 
-                transform: translateY(50px) scale(0.95);
-                opacity: 0;
-            }
-            to { 
-                transform: translateY(0) scale(1);
-                opacity: 1;
-            }
+            from { transform: translateY(50px) scale(0.95); opacity: 0; }
+            to { transform: translateY(0) scale(1); opacity: 1; }
         }
         
         @keyframes fadeIn {
@@ -233,12 +131,11 @@
             to { opacity: 1; }
         }
         
-        /* Enhanced checkmark animation */
         .checkmark-wrapper {
             position: relative;
-            width: 120px;
-            height: 120px;
-            margin: 0 auto var(--spacing-lg);
+            width: 100px;
+            height: 100px;
+            margin: 0 auto var(--spacing-md);
         }
 
         .checkmark-bg {
@@ -246,17 +143,12 @@
             width: 100%;
             height: 100%;
             border-radius: 50%;
-            background: var(--brand-gradient-soft);
+            background: rgba(var(--shadow-color-accent-rgb), 0.08); /* Softer bg */
             animation: scaleBG 0.4s ease-out 0.2s forwards;
             transform: scale(0);
-            filter: blur(20px);
         }
-
         @keyframes scaleBG {
-            to { 
-                transform: scale(1.2);
-                filter: blur(30px);
-            }
+            to { transform: scale(1.1); } /* Slightly larger pulse */
         }
 
         .checkmark {
@@ -264,36 +156,26 @@
             height: 100%;
             border-radius: 50%;
             display: block;
-            stroke-width: 2;
+            stroke-width: 2.5; /* Adjusted for visual balance */
             stroke: var(--success-color);
             stroke-miterlimit: 10;
-            filter: drop-shadow(0 0 15px rgba(255, 122, 0, 0.6));
-            animation: pulse 2s infinite;
+            filter: drop-shadow(0 0 10px rgba(var(--shadow-color-accent-rgb), 0.5));
+            animation: pulseCheckmark 2s infinite ease-in-out;
         }
-        
-        @keyframes pulse {
-            0% { 
-                box-shadow: 0 0 0 0 rgba(255, 122, 0, 0.7);
-                transform: scale(1);
-            }
-            70% { 
-                box-shadow: 0 0 0 30px rgba(255, 122, 0, 0);
-                transform: scale(1.05);
-            }
-            100% { 
-                box-shadow: 0 0 0 0 rgba(255, 122, 0, 0);
-                transform: scale(1);
-            }
+        @keyframes pulseCheckmark {
+            0% { transform: scale(1); box-shadow: 0 0 0 0 rgba(var(--shadow-color-accent-rgb), 0.5); }
+            70% { transform: scale(1.03); box-shadow: 0 0 0 15px rgba(var(--shadow-color-accent-rgb), 0); }
+            100% { transform: scale(1); box-shadow: 0 0 0 0 rgba(var(--shadow-color-accent-rgb), 0); }
         }
         
         .checkmark__circle {
             stroke-dasharray: 166;
             stroke-dashoffset: 166;
-            stroke-width: 2;
+            stroke-width: 2.5;
             stroke-miterlimit: 10;
             stroke: var(--success-color);
             fill: none;
-            animation: stroke 0.6s cubic-bezier(0.65, 0, 0.45, 1) forwards;
+            animation: strokePath 0.6s cubic-bezier(0.65, 0, 0.45, 1) 0.1s forwards; /* Slight delay */
         }
         
         .checkmark__check {
@@ -301,283 +183,116 @@
             stroke-dasharray: 48;
             stroke-dashoffset: 48;
             stroke: var(--success-color);
-            animation: stroke 0.3s cubic-bezier(0.65, 0, 0.45, 1) 0.8s forwards;
+            animation: strokePath 0.3s cubic-bezier(0.65, 0, 0.45, 1) 0.9s forwards; /* Delayed */
         }
         
-        @keyframes stroke {
+        @keyframes strokePath { /* Renamed to avoid conflict */
             100% { stroke-dashoffset: 0; }
         }
 
-        /* Enhanced typography */
-        .title-gradient {
-            background: linear-gradient(135deg, 
-                var(--brand-primary-accent), 
-                var(--brand-secondary-accent),
-                var(--brand-tertiary));
-            background-size: 200% 200%;
+        .title-gradient { /* Using main form's brand gradient for title */
+            background: var(--brand-gradient);
             -webkit-background-clip: text;
             -webkit-text-fill-color: transparent;
             background-clip: text;
             text-fill-color: transparent;
-            animation: gradientText 3s ease infinite;
-            font-weight: 800;
-            letter-spacing: -0.02em;
+            font-weight: 800; /* Bolder to match main form style */
+            letter-spacing: -0.01em;
         }
 
-        @keyframes gradientText {
-            0% { background-position: 0% 50%; }
-            50% { background-position: 100% 50%; }
-            100% { background-position: 0% 50%; }
-        }
-
-        /* Enhanced reference box */
         .reference-box {
-            background: rgba(255, 122, 0, 0.05);
-            border: 1px solid rgba(255, 122, 0, 0.2);
-            border-radius: 12px;
+            background: rgba(var(--shadow-color-accent-rgb), 0.05);
+            border: 1px solid rgba(var(--shadow-color-accent-rgb), 0.15);
+            border-radius: 10px; /* Consistent with main form cards */
             padding: var(--spacing-sm);
-            position: relative;
-            overflow: hidden;
             transition: all 0.3s ease;
         }
-
         .reference-box:hover {
-            background: rgba(255, 122, 0, 0.08);
-            border-color: rgba(255, 122, 0, 0.3);
-            transform: translateY(-2px);
+            background: rgba(var(--shadow-color-accent-rgb), 0.08);
+            border-color: rgba(var(--shadow-color-accent-rgb), 0.25);
         }
 
-        .reference-box::before {
-            content: '';
-            position: absolute;
-            top: 0;
-            left: -100%;
-            width: 100%;
-            height: 100%;
-            background: linear-gradient(90deg, 
-                transparent, 
-                rgba(255, 122, 0, 0.2), 
-                transparent);
-            animation: shimmer 3s infinite;
-        }
-
-        @keyframes shimmer {
-            100% { left: 100%; }
-        }
-
-        /* Enhanced buttons with better states */
-        .btn-custom {
-            padding: 0.875rem 2rem;
-            border-radius: 12px;
-            font-size: 0.95rem;
-            font-weight: 600;
+        .btn-custom { /* Base for new buttons */
+            padding: 0.75rem 1.5rem; 
+            border-radius: 0.625rem; /* Matching main form */
+            font-size: 0.9rem;
+            font-weight: 600; 
             display: inline-flex;
             align-items: center;
             justify-content: center;
-            transition: all 0.3s var(--animation-timing);
+            transition: all 0.3s ease, transform 0.2s ease;
             text-transform: uppercase;
-            letter-spacing: 0.05em;
-            position: relative;
-            overflow: hidden;
-            z-index: 1;
+            letter-spacing: 0.03em;
             cursor: pointer;
             user-select: none;
             -webkit-tap-highlight-color: transparent;
         }
-
-        .btn-custom:focus {
+         .btn-custom:focus-visible { /* Consistent focus style */
             outline: 2px solid var(--brand-primary-accent);
             outline-offset: 2px;
         }
-
         .btn-custom:active {
             transform: scale(0.98);
         }
-
-        .btn-custom::before {
-            content: '';
-            position: absolute;
-            top: 50%;
-            left: 50%;
-            width: 0;
-            height: 0;
-            transform: translate(-50%, -50%);
-            border-radius: 50%;
-            background: rgba(255, 255, 255, 0.1);
-            transition: width 0.6s, height 0.6s;
-            z-index: -1;
-        }
-
-        .btn-custom:hover::before {
-            width: 300px;
-            height: 300px;
-        }
-
         .btn-custom i, .btn-custom svg {
-            transition: transform 0.3s ease;
-            margin-right: 0.75rem;
-            font-size: 1.1rem;
+            transition: transform 0.2s ease;
+            margin-right: 0.625rem; /* Tailwind's mr-2.5 */
+            font-size: 1rem;
         }
-
         .btn-custom:hover i, .btn-custom:hover svg {
-            transform: scale(1.2) rotate(5deg);
+            transform: scale(1.1);
         }
 
-        .btn-restart {
+        .btn-restart-thankyou { /* Unique class for this page's restart button */
             background: var(--brand-gradient);
-            color: var(--text-light);
+            color: var(--text-light); /* Ensure text is light for contrast */
             border: none;
-            box-shadow: 
-                0 4px 15px rgba(255, 122, 0, 0.4),
-                inset 0 1px 0 rgba(255, 255, 255, 0.2);
+            box-shadow: 0 4px 12px rgba(var(--shadow-color-accent-rgb),0.4);
         }
-
-        .btn-restart:hover {
+        .btn-restart-thankyou:hover {
             background: linear-gradient(135deg, var(--brand-secondary-accent), var(--brand-primary-accent));
-            box-shadow: 
-                0 6px 20px rgba(255, 122, 0, 0.5),
-                0 0 30px rgba(255, 122, 0, 0.3),
-                inset 0 1px 0 rgba(255, 255, 255, 0.3);
+            box-shadow: 0 6px 18px rgba(var(--shadow-color-accent-rgb),0.5), 0 0 15px rgba(var(--shadow-color-accent-rgb),0.25);
             transform: translateY(-2px);
         }
 
-        .btn-exit {
-            background: rgba(26, 29, 62, 0.8);
+        .btn-exit-thankyou { /* Unique class for this page's exit button */
+            background: var(--bg-form-element); 
             color: var(--text-medium);
-            border: 1px solid rgba(255, 122, 0, 0.3);
-            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.3);
+            border: 1px solid var(--border-form-element);
+            box-shadow: 0 2px 8px rgba(0,0,0,0.25);
         }
-
-        .btn-exit:hover {
-            background: rgba(26, 29, 62, 1);
-            color: var(--text-light);
+        .btn-exit-thankyou:hover {
+            background-color: hsl(from var(--bg-form-element) h s calc(l + 7%)); /* Slight lighten */
+            color: var(--text-light); 
             border-color: var(--brand-primary-accent);
             transform: translateY(-2px);
-            box-shadow: 
-                0 4px 15px rgba(0, 0, 0, 0.4),
-                0 0 20px rgba(255, 122, 0, 0.2);
+            box-shadow: 0 4px 12px rgba(0,0,0,0.3), 0 0 10px rgba(var(--shadow-color-accent-rgb),0.15);
         }
-
-        /* Enhanced confetti animation */
-        .confetti-container {
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            pointer-events: none;
-            overflow: hidden;
-            z-index: 100;
-        }
-
-        .confetti {
-            position: absolute;
-            width: 10px;
-            height: 10px;
-            background: var(--brand-primary-accent);
-            opacity: 0;
-            animation: confetti-fall 3s ease-out;
-        }
-
-        .confetti:nth-child(even) {
-            background: var(--brand-secondary-accent);
-            animation-duration: 3.5s;
-        }
-
-        .confetti:nth-child(3n) {
-            background: var(--brand-tertiary);
-            animation-duration: 4s;
-        }
-
-        .confetti.square {
-            border-radius: 2px;
-        }
-
-        .confetti.circle {
-            border-radius: 50%;
-        }
-
-        .confetti.triangle {
-            width: 0;
-            height: 0;
-            border-left: 5px solid transparent;
-            border-right: 5px solid transparent;
-            border-bottom: 10px solid var(--brand-primary-accent);
-            background: transparent;
-        }
-
-        @keyframes confetti-fall {
-            0% {
-                transform: translateY(-100vh) rotate(0deg);
-                opacity: 1;
-            }
-            100% {
-                transform: translateY(100vh) rotate(720deg);
-                opacity: 0;
-            }
-        }
-
-        /* Loading state for async operations */
+        
         .loading-spinner {
             display: inline-block;
-            width: 20px;
-            height: 20px;
-            border: 2px solid rgba(255, 122, 0, 0.3);
+            width: 18px; height: 18px;
+            border: 2px solid rgba(255, 255, 255, 0.4); /* Lighter border for visibility on buttons */
             border-radius: 50%;
-            border-top-color: var(--brand-primary-accent);
-            animation: spin 1s ease-in-out infinite;
+            border-top-color: var(--text-light); /* Spinner color */
+            animation: spin 0.8s ease-in-out infinite;
+            margin-right: 0.5rem;
         }
-
         @keyframes spin {
             to { transform: rotate(360deg); }
         }
 
-        /* Accessibility improvements */
         .sr-only {
-            position: absolute;
-            width: 1px;
-            height: 1px;
-            padding: 0;
-            margin: -1px;
-            overflow: hidden;
-            clip: rect(0, 0, 0, 0);
-            white-space: nowrap;
-            border-width: 0;
+            position: absolute; width: 1px; height: 1px; padding: 0; margin: -1px; 
+            overflow: hidden; clip: rect(0, 0, 0, 0); white-space: nowrap; border-width: 0;
         }
 
-        /* Focus visible for keyboard navigation */
-        :focus-visible {
-            outline: 2px solid var(--brand-primary-accent);
-            outline-offset: 2px;
-        }
-
-        /* Responsive improvements */
         @media (max-width: 640px) {
-            :root {
-                --spacing-xs: 0.375rem;
-                --spacing-sm: 0.75rem;
-                --spacing-md: 1rem;
-                --spacing-lg: 1.5rem;
-                --spacing-xl: 2rem;
-            }
-
-            .checkmark-wrapper {
-                width: 100px;
-                height: 100px;
-            }
-            
-            .btn-custom {
-                padding: 0.75rem 1.5rem;
-                font-size: 0.875rem;
-                width: 100%;
-            }
-
-            .success-card {
-                margin: var(--spacing-sm);
-            }
+            .checkmark-wrapper { width: 80px; height: 80px; margin-bottom: var(--spacing-md); }
+            .btn-custom { padding: 0.625rem 1rem; font-size: 0.875rem; width: 100%; }
+            .success-card { margin: var(--spacing-sm); padding: var(--spacing-md); }
         }
 
-        /* Reduced motion support */
         @media (prefers-reduced-motion: reduce) {
             *, *::before, *::after {
                 animation-duration: 0.01ms !important;
@@ -585,210 +300,95 @@
                 transition-duration: 0.01ms !important;
             }
         }
-
-        /* Dark mode enhancements */
-        @media (prefers-color-scheme: dark) {
-            :root {
-                --bg-page: #0A0C1F;
-                --text-light: #F0F4FF;
-            }
-        }
-
-        /* Print styles */
-        @media print {
-            .particle-background,
-            .confetti-container,
-            .btn-custom {
-                display: none !important;
-            }
-
-            .success-card {
-                box-shadow: none;
-                border: 1px solid #ccc;
-            }
-        }
     </style>
 </head>
-<body>
-    <!-- Particle Background -->
-    <div class="particle-background" aria-hidden="true"></div>
-    
-    <!-- Confetti Container -->
-    <div class="confetti-container" id="confettiContainer" aria-hidden="true"></div>
-    
-    <!-- Main Content -->
-    <main class="page-background">
-        <div class="success-card max-w-lg mx-auto p-8 rounded-2xl text-center relative z-10">
-            <!-- Success Animation -->
-            <div class="checkmark-wrapper" role="img" aria-label="Sucesso">
-                <div class="checkmark-bg"></div>
-                <svg class="checkmark" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 52 52">
-                    <circle class="checkmark__circle" cx="26" cy="26" r="25" fill="none"/>
-                    <path class="checkmark__check" fill="none" d="M14.1 27.2l7.1 7.2 16.7-16.8"/>
-                </svg>
-            </div>
-            
-            <!-- Success Message -->
-            <h1 class="text-3xl md:text-4xl font-bold mb-4 title-gradient">
-                Submissão Concluída!
-            </h1>
-            
-            <p class="text-lg text-gray-300 mb-6">
-                A sua submissão foi processada com sucesso. Obrigado pelo seu tempo!
+<body class="page-background">
+    <div class="particle-background" id="particle-bg-thankyou" aria-hidden="true"></div>
+    <main class="success-card max-w-lg mx-auto p-6 sm:p-8 md:p-10 rounded-2xl text-center relative z-10">
+        <div class="checkmark-wrapper" role="img" aria-label="Sucesso">
+            <div class="checkmark-bg"></div>
+            <svg class="checkmark" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 52 52">
+                <circle class="checkmark__circle" cx="26" cy="26" r="25" fill="none"/>
+                <path class="checkmark__check" fill="none" d="M14.1 27.2l7.1 7.2 16.7-16.8"/>
+            </svg>
+        </div>
+        
+        <h1 class="text-3xl md:text-4xl font-bold mb-3 title-gradient">
+            Submissão Concluída!
+        </h1>
+        
+        <p class="text-lg text-text-light mb-6"> O seu formulário foi enviado com sucesso. Obrigado!
+        </p>
+        
+        <div class="reference-box mb-8">
+            <p class="text-sm text-text-medium mb-1">Referência da Submissão:</p> <p class="text-xl font-mono font-semibold text-text-light" id="refNumberDisplay">
+                Aguardando...
             </p>
+        </div>
+        
+        <div class="flex flex-col sm:flex-row gap-4 justify-center mt-8">
+            <button class="btn-custom btn-restart-thankyou" onclick="handleRestart(this)" aria-label="Fazer nova submissão">
+                <i class="fas fa-redo" aria-hidden="true"></i>
+                Novo Formulário
+            </button>
             
-            <!-- Reference Number -->
-            <div class="reference-box mb-8">
-                <p class="text-sm text-gray-400 mb-1">Número de Referência:</p>
-                <p class="text-xl font-mono font-semibold text-orange-400" id="referenceNumber">
-                    #REF-2024-<span class="loading-spinner" aria-label="A carregar"></span>
-                </p>
-            </div>
-            
-            <!-- Additional Info -->
-            <div 
-            </div>
-            
-            <!-- Action Buttons -->
-            <div class="flex flex-col sm:flex-row gap-4 justify-center">
-                <button class="btn-custom btn-restart" onclick="handleRestart()" aria-label="Fazer nova submissão">
-                    <i class="fas fa-redo" aria-hidden="true"></i>
-                    Nova Submissão
-                </button>
-                
-                <button class="btn-custom btn-exit" onclick="handleExit()" aria-label="Voltar ao início">
-                    <i class="fas fa-home" aria-hidden="true"></i>
-                    Página Inicial
-                </button>
-            </div>
+            <button class="btn-custom btn-exit-thankyou" onclick="handleExit(this)" aria-label="Voltar ao início">
+                <i class="fas fa-home" aria-hidden="true"></i>
+                Página Inicial
+            </button>
         </div>
     </main>
 
-    <!-- Enhanced JavaScript -->
     <script>
-        // Generate unique reference number
-        function generateReferenceNumber() {
-            const timestamp = Date.now();
-            const random = Math.floor(Math.random() * 10000).toString().padStart(4, '0');
-            return `${timestamp}-${random}`;
+        function getQueryParam(param) {
+            const urlParams = new URLSearchParams(window.location.search);
+            return urlParams.get(param);
         }
 
-        // Initialize page
         document.addEventListener('DOMContentLoaded', function() {
-            // Set reference number
-            setTimeout(() => {
-                const refElement = document.getElementById('referenceNumber');
-                refElement.innerHTML = `#REF-2024-${generateReferenceNumber()}`;
-            }, 1000);
-
-            // Create particles
-            createParticles();
-            
-            // Create confetti
-            createConfetti();
-            
-            // Add keyboard navigation
-            addKeyboardNavigation();
-            
-            // Check for reduced motion preference
-            checkReducedMotion();
-        });
-
-        // Create animated particles
-        function createParticles() {
-            const particleContainer = document.querySelector('.particle-background');
-            const particleCount = window.innerWidth < 768 ? 15 : 25;
-            
-            for (let i = 0; i < particleCount; i++) {
-                const particle = document.createElement('div');
-                particle.className = 'particle';
-                particle.style.width = Math.random() * 6 + 2 + 'px';
-                particle.style.height = particle.style.width;
-                particle.style.left = Math.random() * 100 + '%';
-                particle.style.animationDelay = Math.random() * 20 + 's';
-                particle.style.animationDuration = (Math.random() * 20 + 20) + 's';
-                particleContainer.appendChild(particle);
+            const refElement = document.getElementById('refNumberDisplay');
+            const ticketRef = getQueryParam('ref');
+            if (ticketRef && refElement) {
+                refElement.textContent = decodeURIComponent(ticketRef);
+            } else if (refElement) {
+                refElement.textContent = "N/D"; // "Não Disponível" or "Not Available"
             }
-        }
 
-        // Create confetti effect
-        function createConfetti() {
-            const container = document.getElementById('confettiContainer');
-            const shapes = ['square', 'circle', 'triangle'];
-            const confettiCount = 50;
-            
-            for (let i = 0; i < confettiCount; i++) {
-                setTimeout(() => {
-                    const confetti = document.createElement('div');
-                    const shape = shapes[Math.floor(Math.random() * shapes.length)];
-                    confetti.className = `confetti ${shape}`;
-                    confetti.style.left = Math.random() * 100 + '%';
-                    confetti.style.animationDelay = Math.random() * 0.5 + 's';
-                    confetti.style.animationDuration = (Math.random() * 1 + 2) + 's';
-                    container.appendChild(confetti);
-                    
-                    // Remove confetti after animation
-                    setTimeout(() => confetti.remove(), 4000);
-                }, i * 30);
-            }
-        }
-
-        // Handle restart button
-        function handleRestart() {
-            // Add loading state
-            event.target.innerHTML = '<span class="loading-spinner"></span> A redirecionar...';
-            event.target.disabled = true;
-            
-            // Redirect after animation
-            setTimeout(() => {
-                window.location.href = '/form'; // Update with your form URL
-            }, 1000);
-        }
-
-        // Handle exit button
-        function handleExit() {
-            // Add loading state
-            event.target.innerHTML = '<span class="loading-spinner"></span> A sair...';
-            event.target.disabled = true;
-            
-            // Redirect after animation
-            setTimeout(() => {
-                window.location.href = '/'; // Update with your homepage URL
-            }, 1000);
-        }
-
-        // Add keyboard navigation
-        function addKeyboardNavigation() {
-            document.addEventListener('keydown', (e) => {
-                if (e.key === 'Enter' && e.ctrlKey) {
-                    handleRestart();
-                } else if (e.key === 'Escape') {
-                    handleExit();
+            const particleContainer = document.getElementById('particle-bg-thankyou');
+            if (particleContainer) {
+                const particleCount = window.innerWidth < 768 ? 15 : 25;
+                for (let i = 0; i < particleCount; i++) {
+                    const particle = document.createElement('div');
+                    particle.className = 'particle';
+                    particle.style.width = Math.random() * 3 + 1 + 'px';
+                    particle.style.height = particle.style.width;
+                    particle.style.left = Math.random() * 100 + '%';
+                    particle.style.top = Math.random() * 100 + '%'; // Start particles spread out
+                    particle.style.animationDelay = Math.random() * 5 + 's'; // Shorter delay variation
+                    particle.style.animationDuration = (Math.random() * 10 + 15) + 's'; // Slightly faster overall
+                     if (Math.random() > 0.5) { 
+                        particle.style.backgroundColor = 'var(--brand-secondary-accent)';
+                    }
+                    particleContainer.appendChild(particle);
                 }
-            });
+            }
+         });
+
+        function handleRestart(buttonElement) {
+            buttonElement.innerHTML = '<span class="loading-spinner"></span> A redirecionar...';
+            buttonElement.disabled = true;
+            setTimeout(() => {
+                window.location.href = '/index.html'; // Ensure this points to your main form if it's not at the root
+            }, 800);
         }
 
-        // Check for reduced motion preference
-        function checkReducedMotion() {
-            const prefersReducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
-            
-            if (prefersReducedMotion) {
-                // Disable animations
-                document.querySelectorAll('.particle, .confetti').forEach(el => {
-                    el.style.animation = 'none';
-                });
-            }
+        function handleExit(buttonElement) {
+            buttonElement.innerHTML = '<span class="loading-spinner"></span> A sair...';
+            buttonElement.disabled = true;
+            setTimeout(() => {
+                window.location.href = '/'; // Redirects to the root of your site
+            }, 800);
         }
-
-        // Track page visibility for performance
-        document.addEventListener('visibilitychange', () => {
-            const particles = document.querySelectorAll('.particle');
-            if (document.hidden) {
-                particles.forEach(p => p.style.animationPlayState = 'paused');
-            } else {
-                particles.forEach(p => p.style.animationPlayState = 'running');
-            }
-        });
     </script>
 </body>
 </html>
