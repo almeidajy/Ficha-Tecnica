@@ -16,13 +16,6 @@
             --brand-secondary-accent: #FF4D00; /* Deeper Orange / Reddish-Orange */
             --shadow-color-accent-rgb: 255, 122, 0; /* RGB for rgba shadow (Orange) */
 
-            /* Option 2: Blue Gradient (To use: comment out Option 1 above, and uncomment Option 2 below) */
-            /*
-            --brand-primary-accent: #00AFFF; /* Brighter Blue */
-            /*--brand-secondary-accent: #007FFF; /* Deeper Blue */
-            /*--shadow-color-accent-rgb: 0, 175, 255; /* RGB for rgba shadow (Blue) */
-            /* --- END OF THEME CHOICE --- */
-
             /* Derived variables */
             --brand-gradient: linear-gradient(135deg, var(--brand-primary-accent), var(--brand-secondary-accent));
             --brand-gradient-hover: linear-gradient(135deg, var(--brand-secondary-accent), var(--brand-primary-accent));
@@ -30,7 +23,7 @@
             --shadow-color-accent-strong: rgba(var(--shadow-color-accent-rgb), 0.5);
             --border-focus: var(--brand-primary-accent); 
 
-            /* Base dark theme colors */
+            /* Base dark theme colors (DEFAULT) */
             --bg-page: #0A0C1F; 
             --bg-card: #101330; 
             --bg-form-element: #1A1D3E; 
@@ -45,6 +38,14 @@
             --footer-bg: #080A1A; 
             --shadow-color-dark: rgba(0, 0, 0, 0.5);
 
+            --text-header-title: #FFFFFF;
+            --text-header-subtitle: #E5E7EB; /* Tailwind gray-200 */
+            
+            /* Footer text colors for dark theme */
+            --text-footer-dark-theme: var(--text-medium); /* #A0A8C0 */
+            --text-footer-currentyear-dark-theme: #9CA3AF; /* Tailwind gray-400 */
+
+
             --transition-speed-fast: 0.2s;
             --transition-speed-medium: 0.3s;
             --transition-speed-slow: 0.5s;
@@ -56,6 +57,32 @@
             --progress-complete: var(--brand-gradient); /* Original gradient for 100% */
         }
 
+        /* Light Mode Variables */
+        body.light-mode {
+            --bg-page: #F0F4FF; 
+            --bg-card: #FFFFFF; 
+            --bg-form-element: #E9EDF5; 
+            
+            --text-light: #1A202C; 
+            --text-medium: #4A5568; 
+            --text-placeholder: #718096; 
+            
+            --border-form-element: #CBD5E0; 
+            
+            --header-bg: #FFFFFF; 
+            /* Footer in light mode will have a dark navy background */
+            --footer-bg-light-mode: #0A0C1F; /* Dark Navy */
+            --shadow-color-dark: rgba(0, 0, 0, 0.1); 
+
+            --text-header-title: var(--text-light); /* Dark text for light header */
+            --text-header-subtitle: var(--text-medium); /* Medium-dark text for light header */
+
+            /* Footer text colors for light mode (on dark navy background) */
+            --text-footer-light-theme-on-dark: #A0A8C0; /* Light gray, same as --text-medium in dark theme */
+            --text-footer-currentyear-light-theme-on-dark: #9CA3AF; /* Same as --text-footer-currentyear-dark-theme */
+        }
+
+
         /* Global Styles & Dynamic Background */
         body {
             font-family: 'Poppins', sans-serif;
@@ -64,6 +91,7 @@
             position: relative;
             overflow-x: hidden;
             min-height: 100vh;
+            transition: background-color var(--transition-speed-medium) ease, color var(--transition-speed-medium) ease;
         }
 
         /* Particle Background Effect */
@@ -85,12 +113,23 @@
             opacity: 0; 
             animation: float 20s infinite ease-in-out;
         }
+        body.light-mode .particle { 
+             background-color: rgba(var(--shadow-color-accent-rgb), 0.5);
+             opacity: 0; 
+        }
+
 
         @keyframes float {
             0%, 100% { transform: translateY(0) translateX(0) scale(1); opacity: 0.3; }
             25% { transform: translateY(-20px) translateX(15px) scale(1.1); opacity: 0.6; }
             50% { transform: translateY(10px) translateX(-10px) scale(0.9); opacity: 0.4; }
             75% { transform: translateY(-15px) translateX(20px) scale(1.05); opacity: 0.5; }
+        }
+        body.light-mode @keyframes float { 
+            0%, 100% { transform: translateY(0) translateX(0) scale(1); opacity: 0.15; }
+            25% { transform: translateY(-20px) translateX(15px) scale(1.1); opacity: 0.3; }
+            50% { transform: translateY(10px) translateX(-10px) scale(0.9); opacity: 0.2; }
+            75% { transform: translateY(-15px) translateX(20px) scale(1.05); opacity: 0.25; }
         }
 
 
@@ -100,7 +139,12 @@
             background-color: var(--header-bg);
             overflow: hidden;
             border-bottom: 1px solid rgba(255, 255, 255, 0.03);
+            transition: background-color var(--transition-speed-medium) ease, border-bottom-color var(--transition-speed-medium) ease;
         }
+        body.light-mode .geometric-header-bg {
+            border-bottom-color: rgba(0,0,0,0.07);
+        }
+
 
         .geometric-header-bg::before {
             content: '';
@@ -122,6 +166,11 @@
             position: relative;
             z-index: 1;
         }
+        /* Header text color adjustments */
+        .header-content h1 { color: var(--text-header-title); }
+        .header-content p { color: var(--text-header-subtitle); }
+        #mode-label { color: var(--text-medium); } /* Label color adapts with theme */
+
 
         /* Form Container */
         .form-container {
@@ -132,7 +181,13 @@
             overflow: hidden;
             border: 1px solid rgba(var(--shadow-color-accent-rgb), 0.1);
             padding: 1.5rem; /* Default padding */
+            transition: background-color var(--transition-speed-medium) ease, box-shadow var(--transition-speed-medium) ease, border-color var(--transition-speed-medium) ease;
         }
+        body.light-mode .form-container {
+             border-color: rgba(var(--shadow-color-accent-rgb), 0.2);
+             box-shadow: 0 15px 40px var(--shadow-color-dark), 0 0 20px rgba(var(--shadow-color-accent-rgb), 0.05) inset;
+        }
+
 
         @media (min-width: 640px) { /* sm breakpoint */
             .form-container {
@@ -161,6 +216,10 @@
             font-size: 0.9rem;
             box-shadow: inset 0 1px 3px rgba(0,0,0,0.3);
         }
+        body.light-mode .form-input, body.light-mode .form-textarea, body.light-mode .form-select {
+            box-shadow: inset 0 1px 2px rgba(0,0,0,0.07);
+        }
+
 
         .form-input::placeholder, .form-textarea::placeholder {
             color: var(--text-placeholder);
@@ -170,9 +229,11 @@
         .form-input:focus, .form-textarea:focus, .form-select:focus {
             outline: none;
             border-color: var(--border-focus);
-            background-color: hsl(from var(--bg-form-element) h s calc(l + 5%)); /* Lighten on focus, CSS native */
             box-shadow: 0 0 0 3px rgba(var(--shadow-color-accent-rgb), 0.25), inset 0 1px 2px rgba(0,0,0,0.2);
             transform: scale(1.01); 
+        }
+        body.light-mode .form-input:focus, body.light-mode .form-textarea:focus, body.light-mode .form-select:focus {
+            background-color: var(--bg-card); 
         }
         
         .form-input.readonly-ticket {
@@ -180,6 +241,12 @@
             color: var(--text-medium);
             border-style: dashed;
         }
+        body.light-mode .form-input.readonly-ticket {
+            background-color: rgba(var(--shadow-color-accent-rgb), 0.08) !important;
+            color: var(--text-medium); 
+            border-color: rgba(var(--shadow-color-accent-rgb), 0.3);
+        }
+
 
         .form-label {
             display: block;
@@ -200,6 +267,10 @@
             display: inline-block;
             text-shadow: 0 0 10px rgba(var(--shadow-color-accent-rgb),0.3);
         }
+        body.light-mode .page-main-title {
+             text-shadow: 0 0 8px rgba(var(--shadow-color-accent-rgb),0.15);
+        }
+
 
         .page-main-title::after {
             content: '';
@@ -240,15 +311,17 @@
             overflow: hidden;
             box-shadow: inset 0 1px 2px rgba(0,0,0,0.4);
         }
+        body.light-mode .progress-bar-track {
+            background-color: rgba(var(--shadow-color-accent-rgb), 0.15);
+            box-shadow: inset 0 1px 2px rgba(0,0,0,0.1);
+        }
 
         .progress-bar-fill {
-            /* Default to low color, JS will update */
             background: var(--progress-low); 
             height: 100%;
             border-radius: 0.25rem;
-            /* Added background transition */
             transition: width var(--transition-speed-slow) cubic-bezier(0.25, 1, 0.5, 1), background var(--transition-speed-medium) ease; 
-            box-shadow: 0 0 10px var(--shadow-color-accent); /* Consider if this shadow needs to change with color */
+            box-shadow: 0 0 10px var(--shadow-color-accent); 
         }
 
         /* Tab Navigation with Sliding Indicator */
@@ -257,13 +330,7 @@
             position: relative; 
             margin-bottom: 1.5rem;
         }
-        #tabs-nav { 
-            position: relative; 
-            padding-right: 1rem; 
-            display: flex; 
-            overflow-x: auto; 
-        }
-
+        
         .tab-item {
             color: var(--text-medium);
             padding: 0.6rem 0.7rem; 
@@ -283,6 +350,9 @@
             color: var(--text-light);
             background-color: rgba(var(--shadow-color-accent-rgb), 0.05);
         }
+        body.light-mode .tab-item:hover {
+            background-color: rgba(var(--shadow-color-accent-rgb), 0.1);
+        }
 
         .tab-item.active-tab-border { 
             color: var(--brand-primary-accent) !important;
@@ -300,7 +370,6 @@
             box-shadow: 0 0 8px var(--brand-primary-accent);
             z-index: 2;
         }
-
 
         /* Buttons */
         .btn {
@@ -325,24 +394,32 @@
             transform: scale(1.1);
         }
 
-        .btn-action-dark {
+        .btn-action-dark { 
             background-color: var(--bg-form-element);
             color: var(--text-medium);
             border-color: var(--border-form-element);
             box-shadow: 0 2px 5px rgba(0,0,0,0.2);
         }
+        body.light-mode .btn-action-dark {
+            box-shadow: 0 2px 5px rgba(0,0,0,0.07);
+        }
+
 
         .btn-action-dark:hover {
-            background-color: hsl(from var(--bg-form-element) h s calc(l + 5%));
             color: var(--text-light);
             border-color: var(--brand-primary-accent);
             transform: translateY(-2px) scale(1.02);
             box-shadow: 0 4px 10px rgba(0,0,0,0.3), 0 0 8px rgba(var(--shadow-color-accent-rgb),0.2);
         }
+         body.light-mode .btn-action-dark:hover {
+            background-color: var(--bg-card); 
+            box-shadow: 0 4px 10px rgba(0,0,0,0.1), 0 0 8px rgba(var(--shadow-color-accent-rgb),0.15);
+        }
+
 
         .btn-primary {
             background: var(--brand-gradient);
-            color: var(--text-light);
+            color: #FFFFFF; 
             border: none;
             box-shadow: 0 4px 12px var(--shadow-color-accent-strong);
         }
@@ -384,7 +461,7 @@
             margin-left: 2px;
         }
 
-        /* Checkbox Styling - Modernized */
+        /* Checkbox Styling */
         .checkbox-container {
             display: inline-flex;
             align-items: center;
@@ -413,9 +490,12 @@
             justify-content: center;
             box-shadow: inset 0 1px 2px rgba(0,0,0,0.2);
         }
+         body.light-mode .custom-checkbox {
+             box-shadow: inset 0 1px 2px rgba(0,0,0,0.05);
+         }
 
         .custom-checkbox .fas { 
-            color: white;
+            color: #FFFFFF; 
             font-size: 0.8rem; 
             opacity: 0;
             transform: scale(0.5);
@@ -432,7 +512,7 @@
 
         .checkbox-input:checked ~ .custom-checkbox {
             background: var(--brand-gradient);
-            border-color: var(--brand-primary-accent);
+            border-color: var(--brand-primary-accent); 
             box-shadow: 0 0 8px var(--shadow-color-accent);
         }
 
@@ -454,6 +534,8 @@
         input[type="date"].custom-date-input { color: var(--text-light); padding-right: 2.75rem; }
         input[type="time"].form-input { color: var(--text-light); }
         input[type="time"].form-input::-webkit-calendar-picker-indicator { filter: invert(1) brightness(0.8); }
+        body.light-mode input[type="time"].form-input::-webkit-calendar-picker-indicator { filter: none; }
+
 
         input[type="date"].custom-date-input:not(:focus):not([value=""]):not([data-has-explicit-value="true"])::before {
             content: attr(data-placeholder); position: absolute; left: 1.125rem; top: 50%;
@@ -477,24 +559,37 @@
             margin-top: 1.25rem; border-radius: 0.75rem; overflow: hidden;
             border: 1px solid var(--border-form-element);
             box-shadow: 0 5px 15px rgba(0,0,0,0.2);
+            transition: border-color var(--transition-speed-medium) ease, box-shadow var(--transition-speed-medium) ease;
         }
+        body.light-mode .data-table {
+             box-shadow: 0 3px 10px rgba(0,0,0,0.07);
+        }
+
         .data-table th, .data-table td {
             border-bottom: 1px solid var(--border-form-element);
             border-right: 1px solid var(--border-form-element);
             padding: 0.875rem 1rem; text-align: left; font-size: 0.875rem;
+            transition: border-color var(--transition-speed-medium) ease, background-color var(--transition-speed-medium) ease, color var(--transition-speed-medium) ease;
         }
         .data-table th:last-child, .data-table td:last-child { border-right: 0; }
         .data-table tr:last-child td { border-bottom: 0; }
 
         .data-table th {
             background: var(--brand-gradient);
-            color: var(--text-light);
+            color: #FFFFFF; 
             font-weight: 600;
             text-transform: uppercase;
             letter-spacing: 0.05em;
         }
         .data-table td { color: var(--text-medium); background-color: var(--bg-card); }
-        .data-table input.form-input { background-color: hsl(from var(--bg-form-element) h s calc(l + 5%)); padding: 0.5rem 0.75rem; font-size: 0.85rem;}
+        body.light-mode .data-table td { background-color: #FFFFFF; }
+
+        .data-table input.form-input { 
+            padding: 0.5rem 0.75rem; font-size: 0.85rem;
+        }
+        body.light-mode .data-table input.form-input {
+            background-color: #F9FAFB; 
+        }
 
 
         /* Equipment Card Styling */
@@ -506,19 +601,29 @@
             transition: all var(--transition-speed-medium) ease;
             box-shadow: 0 3px 8px rgba(0,0,0,0.2);
         }
+        body.light-mode .equipment-section-card {
+            background-color: #FDFDFF; 
+            box-shadow: 0 3px 8px rgba(0,0,0,0.06);
+        }
+
         .equipment-section-card:hover {
             box-shadow: 0 6px 15px rgba(0,0,0,0.3), 0 0 10px rgba(var(--shadow-color-accent-rgb),0.1);
             transform: translateY(-3px) scale(1.01);
             border-left-color: var(--brand-secondary-accent);
         }
+        body.light-mode .equipment-section-card:hover {
+             box-shadow: 0 6px 15px rgba(0,0,0,0.1), 0 0 10px rgba(var(--shadow-color-accent-rgb),0.08);
+        }
         .equipment-section-card h3 {
             font-weight: 700;
+            color: var(--text-light); 
         }
 
         /* File Input Styling */
         .file-input-label {
             padding: 0.75rem 1.5rem; background: var(--brand-gradient);
-            color: var(--text-light); border-radius: 0.625rem; cursor: pointer;
+            color: #FFFFFF; 
+            border-radius: 0.625rem; cursor: pointer;
             transition: all var(--transition-speed-medium) ease; display: inline-flex;
             align-items: center; font-weight: 600; text-transform: uppercase; letter-spacing: 0.03em;
             box-shadow: 0 4px 12px var(--shadow-color-accent);
@@ -534,16 +639,27 @@
             background-color: var(--footer-bg); position: relative; overflow: hidden;
             border-top: 1px solid rgba(var(--shadow-color-accent-rgb), 0.1);
             padding-top: 2.5rem; padding-bottom: 2.5rem;
+            transition: background-color var(--transition-speed-medium) ease, border-top-color var(--transition-speed-medium) ease;
         }
+        body.light-mode .footer-bg {
+            background-color: var(--footer-bg-light-mode); /* Dark Navy for light mode footer */
+            border-top-color: rgba(var(--shadow-color-accent-rgb), 0.15); /* Accent border for contrast */
+        }
+
         .footer-bg::after { 
             content: ''; position: absolute; bottom: 0; left: 0;
             width: 100%; height: 100%;
             background: linear-gradient(to top, rgba(var(--shadow-color-accent-rgb),0.05), transparent 40%);
             opacity: 0.5; z-index: 0; pointer-events: none;
         }
+        body.light-mode .footer-bg::after {
+             background: linear-gradient(to top, rgba(var(--shadow-color-accent-rgb),0.03), transparent 40%);
+             opacity: 0.3; /* Reduced opacity as background is dark */
+        }
+
         .footer-contact-item {
             display: flex; align-items: center; margin-bottom: 0.75rem;
-            font-size: 0.9rem; color: var(--text-medium);
+            font-size: 0.9rem; color: var(--text-footer-dark-theme);
         }
         .footer-contact-item i {
             margin-right: 0.875rem; width: 22px; text-align: center;
@@ -557,6 +673,26 @@
             text-decoration: none; color: var(--brand-secondary-accent);
             filter: brightness(1.2);
         }
+        .footer-bg p { color: var(--text-footer-dark-theme); }
+        #currentYear { color: var(--text-footer-currentyear-dark-theme); }
+
+        body.light-mode .footer-bg p,
+        body.light-mode .footer-bg .footer-contact-item span:not(a span) { /* Target non-link spans */
+            color: var(--text-footer-light-theme-on-dark);
+        }
+        body.light-mode .footer-bg #currentYear {
+            color: var(--text-footer-currentyear-light-theme-on-dark);
+        }
+        body.light-mode .footer-bg .footer-contact-item a {
+            color: var(--brand-primary-accent); /* Keep links accent colored */
+        }
+         body.light-mode .footer-bg .footer-contact-item a:hover {
+            color: var(--brand-secondary-accent);
+        }
+        body.light-mode .footer-bg .footer-contact-item i {
+            color: var(--brand-primary-accent); /* Keep icons accent colored */
+        }
+
 
         /* Ping Button Styling */
         .ping-button {
@@ -570,6 +706,10 @@
             border: 3px solid rgba(255,255,255,0.15); 
             animation: pulse-ping 2s infinite cubic-bezier(0.66, 0, 0, 1);
         }
+        body.light-mode .ping-button {
+             border-color: rgba(var(--shadow-color-accent-rgb),0.2);
+        }
+
         @keyframes pulse-ping {
             0% { box-shadow: 0 8px 25px var(--shadow-color-accent-strong), 0 0 0 0 rgba(var(--shadow-color-accent-rgb), 0.5); }
             70% { box-shadow: 0 8px 25px var(--shadow-color-accent-strong), 0 0 0 15px rgba(var(--shadow-color-accent-rgb), 0); }
@@ -589,6 +729,10 @@
             border: 1px solid var(--border-form-element);
             box-shadow: 0 8px 20px rgba(0,0,0,0.25);
         }
+        body.light-mode .profile-card {
+            box-shadow: 0 8px 20px var(--shadow-color-dark);
+        }
+
         .profile-card::before { 
             content: ''; position: absolute; top: 0; right: 0;
             width: 40%; height: 30%;
@@ -596,6 +740,9 @@
             clip-path: polygon(100% 0, 0 0, 100% 100%);
             opacity: 0.3; border-top-right-radius: 1rem;
         }
+         body.light-mode .profile-card::before {
+             opacity: 0.2;
+         }
 
         /* Declaration Box */
         .declaration-box {
@@ -604,8 +751,15 @@
             border-left: 5px solid var(--brand-primary-accent);
             padding: 1.5rem; border-radius: 0.875rem;
             box-shadow: 0 3px 8px rgba(0,0,0,0.15);
+            transition: background-color var(--transition-speed-medium) ease, border-color var(--transition-speed-medium) ease;
         }
-        .declaration-box h4 { font-weight: 600; }
+         body.light-mode .declaration-box {
+            box-shadow: 0 3px 8px rgba(0,0,0,0.05);
+        }
+        .declaration-box h4 { 
+            font-weight: 600; 
+            color: var(--text-light); 
+        }
 
         /* Feedback Message */
         #feedback-message {
@@ -623,7 +777,7 @@
             opacity: 1;
             transform: translateX(-50%) translateY(0);
         }
-
+        
         /* Enhanced Glow Effects - Animated */
         .glow-effect {
             position: fixed; 
@@ -661,32 +815,53 @@
             to { transform: rotate(360deg); }
         }
 
+        body.light-mode .glow-effect {
+            opacity: 0 !important; 
+            animation: none !important;
+        }
 
-        /* Toggle Switch */
-        .toggle-switch { position: relative; display: inline-block; width: 56px; height: 28px; }
+
+        /* Toggle Switch Styles */
+        .toggle-switch { position: relative; display: inline-block; width: 50px; height: 26px; vertical-align: middle; } 
         .toggle-switch input { opacity: 0; width: 0; height: 0; }
         .toggle-slider {
             position: absolute; cursor: pointer; top: 0; left: 0; right: 0; bottom: 0;
-            background-color: var(--bg-form-element);
-            transition: var(--transition-speed-medium); border-radius: 28px;
+            background-color: var(--bg-form-element); 
+            transition: var(--transition-speed-medium); border-radius: 26px;
             border: 1px solid var(--border-form-element);
         }
         .toggle-slider:before {
-            position: absolute; content: ""; height: 20px; width: 20px;
-            left: 3px; bottom: 3px;
+            position: absolute; content: ""; height: 20px; width: 20px; 
+            left: 2px; bottom: 2px; 
             background-color: white; transition: var(--transition-speed-medium);
             border-radius: 50%; box-shadow: 0 1px 3px rgba(0,0,0,0.3);
         }
-        input:checked + .toggle-slider { background: var(--brand-gradient); border-color: transparent; }
+
+        body.light-mode .toggle-switch input:not(:checked) + .toggle-slider {
+            background-color: #CBD5E0; 
+            border-color: #A0AEC0;   
+        }
+        body.light-mode .toggle-switch input:not(:checked) + .toggle-slider:before {
+             background-color: white;
+        }
+
+        input:checked + .toggle-slider { 
+            background: var(--brand-gradient); 
+            border-color: transparent; 
+        }
+        body.light-mode input:checked + .toggle-slider { /* This is when Light Mode is active (toggle is "on") */
+            background-color: var(--brand-primary-accent); 
+        }
+
+
         input:focus + .toggle-slider { box-shadow: 0 0 0 3px rgba(var(--shadow-color-accent-rgb),0.3); }
-        input:checked + .toggle-slider:before { transform: translateX(28px); }
+        input:checked + .toggle-slider:before { transform: translateX(24px); } 
+
 
         /* Responsive Adaptations */
         @media (max-width: 640px) {
             .page-main-title { font-size: 1.625rem; }
             .section-title { font-size: 1.125rem; }
-            .glow-1, .glow-2 { width: 200px; height: 200px; filter: blur(40px); }
-            /* .form-container { padding: 1.25rem; } */ /* Default mobile padding is 1.5rem, this would override */
             .btn { padding: 0.625rem 1rem; font-size: 0.85rem; }
             .ping-button { width: 60px; height: 60px; font-size: 0.9rem; }
             .tabs-nav-container { margin-bottom: 1rem; }
@@ -714,8 +889,14 @@
                 <img src="https://grupoangbu.com/wp-content/uploads/2024/12/cropped-cropped-ANGBU-LDA-With-border-Transparent-768x199.webp" alt="Grupo Angbu LDA Logo" class="h-10 sm:h-12 w-auto" onerror="this.style.display='none'; this.alt='Logo Grupo Angbu indisponível';">
             </div>
             <div class="text-right">
-                <h1 class="text-2xl sm:text-3xl font-bold text-white leading-tight">Ficha Técnica</h1>
-                <p class="text-xs sm:text-sm text-gray-300">Instalação e Intervenção</p>
+                <h1 class="text-2xl sm:text-3xl font-bold leading-tight">Ficha Técnica</h1>
+                <p class="text-xs sm:text-sm">Instalação e Intervenção</p>
+            </div>
+            <div class="flex items-center ml-4"> 
+                <span class="text-xs sm:text-sm mr-2" id="mode-label">Modo Escuro</span> <label for="theme-toggle" class="toggle-switch">
+                    <input type="checkbox" id="theme-toggle" class="checkbox-input">
+                    <span class="toggle-slider"></span> 
+                </label>
             </div>
         </div>
     </header>
@@ -795,7 +976,7 @@
                                 <div>
                                     <label for="ticket_reference" class="form-label">Número de Referência do Pedido</label>
                                     <input type="text" id="ticket_reference" name="ticket_reference" class="form-input readonly-ticket" value="ANG-AAAAMMDD-XXXX" readonly>
-                                    <p class="text-xs mt-1 opacity-60">(Gerado automaticamente após seleção da data)</p>
+                                    <p class="text-xs mt-1 opacity-60"> (Gerado automaticamente após seleção da data)</p>
                                 </div>
                             </div>
                         </div>
@@ -854,7 +1035,7 @@
                         <div class="space-y-8">
                             <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
                                 <div class="equipment-section-card p-5">
-                                    <h3 class="text-lg font-semibold mb-4 text-white">Equipamento Anterior (Retirado)</h3>
+                                    <h3 class="text-lg font-semibold mb-4">Equipamento Anterior (Retirado)</h3>
                                     <div class="space-y-4">
                                         <div><label class="form-label text-xs">Serial Antena:</label><input type="text" class="form-input text-sm" name="old_antenna_serial" placeholder="S/N da Antena antiga"></div>
                                         <div><label class="form-label text-xs">Serial Router:</label><input type="text" class="form-input text-sm" name="old_router_serial" placeholder="S/N do Router antigo"></div>
@@ -864,7 +1045,7 @@
                                     </div>
                                 </div>
                                 <div class="equipment-section-card p-5">
-                                    <h3 class="text-lg font-semibold mb-4 text-white">Equipamento Novo (Instalado)</h3>
+                                    <h3 class="text-lg font-semibold mb-4">Equipamento Novo (Instalado)</h3>
                                     <div class="space-y-4">
                                         <div><label class="form-label text-xs">Serial Antena:</label><input type="text" class="form-input text-sm" name="new_antenna_serial" placeholder="S/N da Antena nova"></div>
                                         <div><label class="form-label text-xs">Serial Router:</label><input type="text" class="form-input text-sm" name="new_router_serial" placeholder="S/N do Router novo"></div>
@@ -990,7 +1171,7 @@
                                 </div>
                             </div>
                             <div class="declaration-box">
-                                <h4 class="text-md font-semibold text-white mb-3">Declaração do Técnico Responsável:</h4>
+                                <h4 class="text-md font-semibold mb-3">Declaração do Técnico Responsável:</h4>
                                 <p class="text-sm mb-5 leading-relaxed">
                                     Declaro solenemente que a intervenção técnica descrita neste formulário foi realizada em conformidade com as normas técnicas vigentes, as boas práticas da indústria e as especificações do serviço. As informações aqui prestadas são verdadeiras, precisas e completas, refletindo fielmente os trabalhos executados. Todos os equipamentos instalados e/ou reparados foram devidamente testados e encontram-se em pleno funcionamento na data de conclusão desta intervenção.
                                 </p>
@@ -1024,8 +1205,8 @@
     <footer class="footer-bg mt-16">
         <div class="container mx-auto px-4 sm:px-6 flex flex-col md:flex-row justify-between items-center max-w-5xl relative z-10">
             <div class="mb-6 md:mb-0 text-center md:text-left">
-                <img src="https://grupoysam.com/wp-content/uploads/2025/05/Tchiowa-Net.webp" alt="Tchiowa Net Logo" class="h-16 sm:h-20 mb-4 mx-auto md:mx-0" onerror="this.style.display='none'; this.alt='Logo Tchiowa Net indisponível'">
-                <p class="text-xs text-gray-400">&copy; <span id="currentYear"></span> Grupo Angbu & Tchiowa Net. Todos os direitos reservados.</p>
+                <img src="https://grupoysam.com/wp-content/uploads/2025/05/Tchiowa-Net.webp" alt="Tchiowa Net Logo" class="h-16 sm:h-20 mb-4 mx-auto md:mx-0" onerror="this.style.display='none'; this.alt='Logo Tchiowa Net indisponível';">
+                <p class="text-xs">&copy; <span id="currentYear"></span> Grupo Angbu & Tchiowa Net. Todos os direitos reservados.</p>
             </div>
             <div class="text-center md:text-right">
                 <div class="footer-contact-item justify-center md:justify-end">
@@ -1061,13 +1242,18 @@
         const prevButtons = document.querySelectorAll('.prev-tab-btn');
         const nextButtonClientInfo = document.getElementById('nextButtonClientInfo');
         
-        // --- Form Control Buttons ---
+        // --- Form Control Buttons & Theme Toggle ---
         const saveProgressBtn = document.getElementById('save-progress-btn');
         const resetFormBtn = document.getElementById('reset-form-btn');
-        const submitFormBtn = document.getElementById('submit-form-btn'); // Top submit
-        const submitFinalBtn = document.getElementById('submit-final-btn'); // Final submit
+        const submitFormBtn = document.getElementById('submit-form-btn'); 
+        const submitFinalBtn = document.getElementById('submit-final-btn'); 
         const feedbackMessageEl = document.getElementById('feedback-message');
         const localStorageKey = 'savedTechnicalFormProgress_v4_insane_ui_fix_v3_color_progress';
+        const themeToggle = document.getElementById('theme-toggle');
+        const bodyElement = document.body;
+        const modeLabel = document.getElementById('mode-label');
+        const localStorageThemeKey = 'themePreferenceAngbuFormFichaTecnica';
+
 
         // --- Particle Background ---
         const particleBg = document.getElementById('particle-bg');
@@ -1094,22 +1280,57 @@
         }
 
 
+        // --- Theme Toggle Logic ---
+        function applyTheme(theme) {
+            if (theme === 'light') {
+                bodyElement.classList.add('light-mode');
+                if (modeLabel) modeLabel.textContent = 'Modo Claro'; // Updated to Portuguese
+                if (themeToggle) themeToggle.checked = true;
+            } else { // Default to dark
+                bodyElement.classList.remove('light-mode');
+                if (modeLabel) modeLabel.textContent = 'Modo Escuro'; // Updated to Portuguese
+                if (themeToggle) themeToggle.checked = false;
+            }
+        }
+
+        if (themeToggle) {
+            themeToggle.addEventListener('change', function() {
+                const selectedTheme = this.checked ? 'light' : 'dark';
+                localStorage.setItem(localStorageThemeKey, selectedTheme);
+                applyTheme(selectedTheme);
+            });
+        }
+        
+        const savedTheme = localStorage.getItem(localStorageThemeKey);
+        if (savedTheme) {
+            applyTheme(savedTheme);
+        } else {
+            applyTheme('dark'); 
+        }
+
+
         // --- Show Feedback Message ---
-        function showFeedback(message, type = 'info') { // Added 'info' as a possible type
+        function showFeedback(message, type = 'info') { 
             if (!feedbackMessageEl) return;
             feedbackMessageEl.textContent = message;
             feedbackMessageEl.className = 'show'; 
             feedbackMessageEl.style.background = ''; 
 
             if (type === 'error') {
-                feedbackMessageEl.style.background = 'linear-gradient(135deg, #E53E3E, #C53030)'; // Red for error
+                feedbackMessageEl.style.background = 'linear-gradient(135deg, #E53E3E, #C53030)'; 
             } else if (type === 'success') {
-                feedbackMessageEl.style.background = 'linear-gradient(135deg, #48BB78, #38A169)'; // Green for success
-            } else { // Default to brand gradient for info or other types
+                feedbackMessageEl.style.background = 'linear-gradient(135deg, #48BB78, #38A169)';
+            } else { 
                 feedbackMessageEl.style.background = 'var(--brand-gradient)';
             }
+            
+            feedbackMessageEl.style.opacity = '1';
+            feedbackMessageEl.style.transform = 'translateX(-50%) translateY(0)';
+
             setTimeout(() => {
                 feedbackMessageEl.classList.remove('show');
+                feedbackMessageEl.style.opacity = '0';
+                feedbackMessageEl.style.transform = 'translateX(-50%) translateY(100%)';
             }, 3500); 
         }
 
@@ -1140,7 +1361,7 @@
                 }
                 updateTabSlider(newActiveTabLink);
             }
-            checkAllMandatoryFields(); // Also updates progress bar
+            checkAllMandatoryFields(); 
         }
         
         if (tabsNav && tabSlider) {
@@ -1200,7 +1421,7 @@
         }
 
         nextButtons.forEach(button => {
-            if (button.id === 'nextButtonClientInfo') return; // Already handled
+            if (button.id === 'nextButtonClientInfo') return; 
             button.addEventListener('click', function() {
                 const currentTabPane = button.closest('.tab-pane.active');
                 if (currentTabPane && validateCurrentTabFields(currentTabPane)) {
@@ -1221,7 +1442,7 @@
 
         // --- Ticket Reference Generation ---
         const plannedDateInput = document.getElementById('planned_service_date');
-        const ticketRefInput = document.getElementById('ticket_reference');
+        const ticketRefInput = document.getElementById('ticket_reference'); 
         const initialTicketRefValue = "ANG-AAAAMMDD-XXXX"; 
 
         function generateTicketReference(dateString) {
@@ -1243,7 +1464,11 @@
 
         if (plannedDateInput && ticketRefInput) {
             plannedDateInput.addEventListener('change', function() {
-                ticketRefInput.value = generateTicketReference(this.value);
+                if (this.value) { 
+                    ticketRefInput.value = generateTicketReference(this.value);
+                } else { 
+                    ticketRefInput.value = initialTicketRefValue;
+                }
             });
         }
 
@@ -1372,12 +1597,10 @@
                     }
                 }
 
-                if (plannedDateInput && ticketRefInput) { 
-                    if (data.planned_service_date) {
-                        ticketRefInput.value = generateTicketReference(data.planned_service_date);
-                    } else {
-                        ticketRefInput.value = initialTicketRefValue;
-                    }
+                if (plannedDateInput && ticketRefInput && data.planned_service_date) { 
+                    ticketRefInput.value = generateTicketReference(data.planned_service_date);
+                } else if (ticketRefInput) {
+                     ticketRefInput.value = initialTicketRefValue;
                 }
                 showFeedback('Progresso anterior carregado.', 'info');
             }
@@ -1418,58 +1641,37 @@
             });
         }
 
-        // --- Form Submission for Netlify AJAX ---
+        // --- Form Submission for Netlify AJAX & Redirect to Thank You Page ---
         mainForm.addEventListener('submit', function(event) {
-            event.preventDefault(); // Prevent default browser submission
+            event.preventDefault(); 
 
             if (checkAllMandatoryFields()) {
                 const formData = new FormData(mainForm);
+                const ticketReferenceValue = ticketRefInput ? ticketRefInput.value : 'N/A'; 
                 
-                // Disable submit buttons to prevent multiple clicks while sending
                 if(submitFormBtn) submitFormBtn.disabled = true;
                 if (submitFinalBtn) submitFinalBtn.disabled = true;
-                showFeedback('A enviar dados...', 'info');
-
-                // Netlify AJAX submission
-                // We POST to the current page path. Netlify handles it because of data-netlify="true"
-                // and the hidden "form-name" input.
-                fetch(location.pathname, { // Using location.pathname for Netlify AJAX
+                
+                fetch(location.pathname, { 
                     method: 'POST',
                     headers: { "Content-Type": "application/x-www-form-urlencoded" },
-                    body: new URLSearchParams(formData).toString() // Encode FormData for Netlify
+                    body: new URLSearchParams(formData).toString()
                 })
-                .then(() => {
-                    console.log('Submissão enviada para Netlify com sucesso (aparente).');
-                    showFeedback('Formulário submetido com sucesso!', 'success');
-
-                    // Your existing success and form reset logic:
-                    setTimeout(() => {
+                .then(response => { 
+                    if (response.ok) {
+                        console.log('Submissão enviada para Netlify com sucesso.');
                         localStorage.removeItem(localStorageKey); 
-                        mainForm.reset();
-                        document.querySelectorAll('input[type="date"].custom-date-input').forEach(dIn => {
-                            dIn.setAttribute('data-has-explicit-value', 'false'); 
-                            dIn.value = '';
-                            if(dIn.id === 'planned_service_date' && ticketRefInput) {
-                                ticketRefInput.value = initialTicketRefValue;
-                            }
-                        });
-                        const saOtherTxt = document.getElementById('service_area_other_text');
-                        if(saOtherTxt) { saOtherTxt.value = ''; saOtherTxt.disabled = true; saOtherTxt.required = false;}
-                        const fnDisp = document.getElementById('file_attachment_name');
-                        if(fnDisp) fnDisp.textContent = 'Nenhum ficheiro selecionado';
-                        
-                        setActiveTab('clientInfo', true); 
-                        checkAllMandatoryFields(); 
-                    }, 500); // Delay before reset
+                        window.location.href = '/thank-you.html?ref=' + encodeURIComponent(ticketReferenceValue); 
+                    } else {
+                        throw new Error('Netlify form submission failed with status: ' + response.status);
+                    }
                 })
                 .catch(error => {
                     console.error('Erro ao submeter para Netlify:', error);
                     showFeedback('Erro ao submeter o formulário para Netlify. (' + error.message + ')', 'error');
-                    // Re-enable submit buttons based on form validity
                     checkAllMandatoryFields();
                 });
             } else {
-                // Logic for when not all mandatory fields are filled
                 showFeedback('Por favor, preencha todos os campos obrigatórios antes de submeter.', 'error');
                 for (const pane of tabPanes) {
                     if (!validateCurrentTabFields(pane)) { 
@@ -1515,7 +1717,7 @@
         
         // --- Initial Setup ---
         loadProgress(); 
-        setActiveTab('clientInfo', true);
+        setActiveTab('clientInfo', true); 
 
     });
     </script>
