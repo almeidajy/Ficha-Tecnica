@@ -654,13 +654,26 @@
         }
         body.light-mode .footer-bg::after {
              background: linear-gradient(to top, rgba(var(--shadow-color-accent-rgb),0.03), transparent 40%);
-             opacity: 0.3; /* Reduced opacity as background is dark */
+             opacity: 0.3; 
         }
 
-        .footer-contact-item {
+        /* Default dark theme footer text colors */
+        .footer-contact-item { /* This rule applies to the span inside by default due to inheritance */
             display: flex; align-items: center; margin-bottom: 0.75rem;
-            font-size: 0.9rem; color: var(--text-footer-dark-theme);
+            font-size: 0.9rem; color: var(--text-footer-dark-theme); 
         }
+        .footer-bg p { color: var(--text-footer-dark-theme); }
+        #currentYear { color: var(--text-footer-currentyear-dark-theme); }
+
+        /* Light mode footer text colors (on dark navy background) */
+        body.light-mode .footer-bg p,
+        body.light-mode .footer-bg .footer-contact-item span:not(a span) { /* Target non-link spans specifically */
+            color: var(--text-footer-light-theme-on-dark);
+        }
+        body.light-mode .footer-bg #currentYear {
+            color: var(--text-footer-currentyear-light-theme-on-dark);
+        }
+        /* Links and icons in footer remain accent colored in both modes */
         .footer-contact-item i {
             margin-right: 0.875rem; width: 22px; text-align: center;
             color: var(--brand-primary-accent); font-size: 1.1em;
@@ -672,25 +685,6 @@
         .footer-contact-item a:hover {
             text-decoration: none; color: var(--brand-secondary-accent);
             filter: brightness(1.2);
-        }
-        .footer-bg p { color: var(--text-footer-dark-theme); }
-        #currentYear { color: var(--text-footer-currentyear-dark-theme); }
-
-        body.light-mode .footer-bg p,
-        body.light-mode .footer-bg .footer-contact-item span:not(a span) { /* Target non-link spans */
-            color: var(--text-footer-light-theme-on-dark);
-        }
-        body.light-mode .footer-bg #currentYear {
-            color: var(--text-footer-currentyear-light-theme-on-dark);
-        }
-        body.light-mode .footer-bg .footer-contact-item a {
-            color: var(--brand-primary-accent); /* Keep links accent colored */
-        }
-         body.light-mode .footer-bg .footer-contact-item a:hover {
-            color: var(--brand-secondary-accent);
-        }
-        body.light-mode .footer-bg .footer-contact-item i {
-            color: var(--brand-primary-accent); /* Keep icons accent colored */
         }
 
 
@@ -837,20 +831,23 @@
             border-radius: 50%; box-shadow: 0 1px 3px rgba(0,0,0,0.3);
         }
 
+        /* This targets the toggle when it's OFF in LIGHT MODE (meaning Dark Mode is selected) */
         body.light-mode .toggle-switch input:not(:checked) + .toggle-slider {
-            background-color: #CBD5E0; 
+            background-color: #CBD5E0; /* Light grey for "off" state in light mode */
             border-color: #A0AEC0;   
         }
         body.light-mode .toggle-switch input:not(:checked) + .toggle-slider:before {
-             background-color: white;
+             background-color: white; /* Knob is white */
         }
 
+        /* This targets the toggle when it's ON (checked) */
         input:checked + .toggle-slider { 
-            background: var(--brand-gradient); 
+            background: var(--brand-gradient); /* Dark Mode: toggle "on" (checkbox checked) shows brand gradient */
             border-color: transparent; 
         }
-        body.light-mode input:checked + .toggle-slider { /* This is when Light Mode is active (toggle is "on") */
-            background-color: var(--brand-primary-accent); 
+        /* This targets the toggle when it's ON in LIGHT MODE (meaning Light Mode is selected) */
+        body.light-mode input:checked + .toggle-slider {
+            background-color: var(--brand-primary-accent); /* Light Mode: toggle "on" shows primary accent */
         }
 
 
